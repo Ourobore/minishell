@@ -30,11 +30,8 @@ SRCS	= ft_atoi.c \
 			ft_putendl_fd.c \
 			ft_putnbr_fd.c \
 			ft_itoa.c \
-			ft_strmapi.c
-
-#ft_memchr.c \
-
-BONUS	= ft_lstnew_bonus.c \
+			ft_strmapi.c \
+			ft_lstnew_bonus.c \
 			ft_lstadd_front_bonus.c \
 			ft_lstsize_bonus.c \
 			ft_lstlast_bonus.c \
@@ -42,38 +39,35 @@ BONUS	= ft_lstnew_bonus.c \
 			ft_lstdelone_bonus.c \
 			ft_lstclear_bonus.c \
 			ft_lstiter_bonus.c \
-			ft_lstmap_bonus.c
+			ft_lstmap_bonus.c \
+			get_next_line.c
 
-HEADS	= libft.h
+#ft_memchr.c \
 
-OBJS	:= ${SRCS:.c=.o}
+HEADS	=	libft.h
 
-BOBJS	:= ${BONUS:.c=.o}
+OBJS	:=	${SRCS:.c=.o}
 
-NAME	= libft.a
+NAME	=	libft.a
 
-CC	= gcc
+CC		=	gcc
 
-FLAGS	= -Wall -Wextra -Werror
+FLAGS	=	-Wall -Wextra -Werror
 
-RM	= rm -f
+RM		=	rm -f
 
-all:	$(NAME)
+all		:	$(NAME)
 
 $(NAME):	${OBJS} 
 			ar rc ${NAME} ${OBJS}
 			ranlib ${NAME}
 
-bonus:		${OBJS} ${BOBJS} 
-			ar rc ${NAME} ${OBJS} ${BOBJS}
-			ranlib ${NAME}
-
-clean:
+clean	:
 			${RM} ${OBJS} ${BOBJS}
 
-fclean:		clean
+fclean	:	clean
 			${RM} ${NAME} a.out
 
-re:		fclean all
+re		:	fclean all
 
-.PHONY:	all clean fclean re
+.PHONY	:	all clean fclean re
