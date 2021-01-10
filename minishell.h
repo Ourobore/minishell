@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/09 17:28:01 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/10 10:59:43 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,7 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
+
+# include "libft/libft.h"
 
 #endif

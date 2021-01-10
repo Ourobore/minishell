@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:59:24 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/09 17:00:35 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/10 11:40:13 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ int	get_next_line(int fd, char **line)
 	if (fd < 0 || !line || !cat)
 		return (-1);
 	cat[0] = 0;
-	ret = 1;
+	ret = read(fd, &buf, 1);
 	while (ret != 0)
 	{
-		ret = read(fd, &buf, 1);
 		if (ret == -1)
 			return (-1);
 		if (buf == '\n')
 			break ;
 		cat = ft_cat(cat, buf);
+		ret = read(fd, &buf, 1);
 	}
 	*line = cat;
 	if (*line == NULL)

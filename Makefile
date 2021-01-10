@@ -4,7 +4,7 @@ DIR		=	./srcs
 
 INCLUDE	=	-I .
 
-OBJS	:=	${SRCS:.c=.o}
+OBJS	:=	$(SRCS:.c=.o)
 
 CC		=	gcc
 
@@ -15,13 +15,13 @@ NAME	=	minishell
 LIBFT	=	./libft/libft.a
 
 %.o: %.c
-			$(CC) $(CFLAGS) $< -o $@
+			$(CC) $(CFLAGS) $< -o $@ $(INCLUDE)
 
 all		:	$(NAME)
 
-$(NAME)	:	$(OBJS)
+$(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) main.c $(OBJS) $(INCLUDE) -L$(LIBFT) -o $(NAME)
+			$(CC) $(CFLAGS) main.c $(OBJS) $(LIBFT) -o $(NAME)
 
 clean	:
 			@make clean -C ./libft

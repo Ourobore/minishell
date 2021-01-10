@@ -44,29 +44,29 @@ SRCS	= ft_atoi.c \
 
 #ft_memchr.c \
 
-HEADS	=	libft.h
+OBJS	:=	$(SRCS:.c=.o)
 
-OBJS	:=	${SRCS:.c=.o}
+INCLUDE	=	-I .
 
 NAME	=	libft.a
 
 CC		=	gcc
 
-FLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror
 
-RM		=	rm -f
+RM		=	rm -rf
 
 all		:	$(NAME)
 
-$(NAME):	${OBJS} 
-			ar rc ${NAME} ${OBJS}
-			ranlib ${NAME}
+$(NAME):	$(OBJS)
+			ar rc $(NAME) $(OBJS)
+			ranlib $(NAME)
 
 clean	:
-			${RM} ${OBJS} ${BOBJS}
+			$(RM) $(OBJS)
 
 fclean	:	clean
-			${RM} ${NAME} a.out
+			$(RM) $(NAME) a.out
 
 re		:	fclean all
 
