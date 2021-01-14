@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:25:55 by lchapren         ###   ########.fr       */
+/*   Created: 2019/11/07 15:30:29 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-int	prompt_line(char **line)
+void	ft_putnbr_fd(int n, int fd)
 {
-	ft_putstr_fd("minishell@ayuroyet-lchapren $ ", 1);
-	get_next_line(0, line);
-	if (ft_strcmp(*line, "exit") == 0)
-		return (0);
+	long int	nbl;
+
+	nbl = n;
+	if (nbl < 0)
+	{
+		write(fd, "-", 1);
+		nbl = nbl * -1;
+	}
+	if (nbl >= 0 && nbl <= 9)
+		ft_putchar_fd(nbl + 48, fd);
 	else
-		return (1);
+	{
+		ft_putnbr_fd(nbl / 10, fd);
+		ft_putchar_fd((nbl % 10) + 48, fd);
+	}
 }

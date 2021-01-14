@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:25:55 by lchapren         ###   ########.fr       */
+/*   Created: 2019/11/05 17:24:26 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-int	prompt_line(char **line)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	ft_putstr_fd("minishell@ayuroyet-lchapren $ ", 1);
-	get_next_line(0, line);
-	if (ft_strcmp(*line, "exit") == 0)
-		return (0);
+	unsigned long int	i;
+	unsigned char		*d;
+	unsigned char		*s;
+
+	i = 0;
+	d = (unsigned char*)dst;
+	s = (unsigned char*)src;
+	if (!dst && !src)
+		return (NULL);
+	if (src < dst)
+		while (i++ < len)
+			d[len - i] = s[len - i];
 	else
-		return (1);
+		while (i++ < len)
+			*(d++) = *(s++);
+	return (dst);
 }

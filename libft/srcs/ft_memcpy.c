@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:25:55 by lchapren         ###   ########.fr       */
+/*   Created: 2019/11/05 11:13:18 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-int	prompt_line(char **line)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	ft_putstr_fd("minishell@ayuroyet-lchapren $ ", 1);
-	get_next_line(0, line);
-	if (ft_strcmp(*line, "exit") == 0)
-		return (0);
-	else
-		return (1);
+	unsigned long int	i;
+	unsigned char		*tmp;
+	unsigned char		*tsrc;
+
+	i = 0;
+	tmp = (unsigned char*)dst;
+	tsrc = (unsigned char*)src;
+	if (!dst && !src)
+		return (NULL);
+	while (i < n)
+	{
+		tmp[i] = tsrc[i];
+		i++;
+	}
+	return (dst);
 }

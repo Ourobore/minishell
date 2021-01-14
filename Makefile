@@ -1,4 +1,4 @@
-SRC		=	prompt.c
+SRCS	=	$(DIR)/prompt.c
 
 DIR		=	./srcs
 
@@ -12,16 +12,17 @@ CFLAGS	=	-Wall -Wextra -Werror
 
 NAME	=	minishell
 
-LIBFT	=	./libft/libft.a
+LIBFT	=	libft/libft.a
 
-%.o: %.c
-			$(CC) $(CFLAGS) $< -o $@ $(INCLUDE)
+#%.o: %.c
+#			$(CC) $(CFLAGS) $< -o $@
 
 all		:	$(NAME)
 
 $(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) main.c $(OBJS) $(LIBFT) -o $(NAME)
+			#$(CC) $(CFLAGS) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) -g -fsanitize=address main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 clean	:
 			@make clean -C ./libft

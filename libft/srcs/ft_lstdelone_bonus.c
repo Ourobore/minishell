@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:25:55 by lchapren         ###   ########.fr       */
+/*   Created: 2019/11/13 09:48:57 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-int	prompt_line(char **line)
+void	ft_lstdelone(t_list *lst, void (*del)(void*))
 {
-	ft_putstr_fd("minishell@ayuroyet-lchapren $ ", 1);
-	get_next_line(0, line);
-	if (ft_strcmp(*line, "exit") == 0)
-		return (0);
-	else
-		return (1);
+	if (!lst || !del)
+		return ;
+	del(lst->content);
+	free(lst);
+	lst = NULL;
 }

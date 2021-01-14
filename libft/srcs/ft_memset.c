@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:25:55 by lchapren         ###   ########.fr       */
+/*   Created: 2019/11/05 09:34:16 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-int	prompt_line(char **line)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	ft_putstr_fd("minishell@ayuroyet-lchapren $ ", 1);
-	get_next_line(0, line);
-	if (ft_strcmp(*line, "exit") == 0)
-		return (0);
-	else
-		return (1);
+	unsigned long int	i;
+	unsigned char		*tmp;
+
+	i = 0;
+	tmp = (unsigned char*)b;
+	while (i < len)
+	{
+		tmp[i] = c;
+		i++;
+	}
+	return (b);
 }

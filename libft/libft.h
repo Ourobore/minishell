@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 17:44:23 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/10 10:15:33 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/14 10:59:02 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char				*ft_strdup(const char *s1);
 
 char				*ft_strnstr(const char *haystack, const char *needle, \
 																size_t len);
+int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t				ft_strlen(const char *s);
 size_t				ft_strlcat(char *dst, const char *src, size_t dstsize);

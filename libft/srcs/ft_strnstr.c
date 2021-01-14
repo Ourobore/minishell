@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:40:29 by lchapren         ###   ########.fr       */
+/*   Created: 2019/11/05 09:28:15 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../libft.h"
 
-int main(void)
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
-	int		loop;
-	char	*line;
-	char	**split;
+	unsigned long int	i;
+	unsigned long int	j;
 
-	loop = 1;
-	printf("%d\n", ft_strcmp("a", "A"));
-	while (loop > 0)
+	i = 0;
+	j = 0;
+	if (needle[i] == 0)
+		return ((char *)haystack);
+	while (haystack[i] && needle[j])
 	{
-		loop = prompt_line(&line);
-		split = ft_split(line, ' ');
-		for(int i = 0; split[i]; i++)
+		while (haystack[i] == needle[j] && i < len)
 		{
-			ft_putstr_fd(split[i], 1);
-			ft_putchar_fd('\n', 1);
+			if (needle[j + 1] == 0)
+				return ((char *)&haystack[i - j]);
+			i++;
+			j++;
 		}
-		for(int i = 0; split[i]; i++)
-			free(split[i]);
-		free(split);
-		free(line);
+		i = (i - j) + 1;
+		j = 0;
 	}
-	//fonction de free
-
+	return (NULL);
 }
