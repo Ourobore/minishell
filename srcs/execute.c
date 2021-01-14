@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 19:01:18 by lchapren         ###   ########.fr       */
+/*   Created: 2021/01/14 18:09:16 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/14 19:00:52 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../minishell.h"
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <errno.h>
-# include <stdio.h>
+int	call_builtin(char **token)
+{
+	int	ret;
 
-# include "libft/libft.h"
-
-int	prompt_line(char **line);
-
-//Built ins
-int	call_builtin(char **token);
-int	builtin_echo(char **token);
-
-#endif
+	ret = -1;
+	if (ft_strcmp(token[0], "echo") == 0 && ret++)
+		builtin_echo(token);
+	return (ret);
+}

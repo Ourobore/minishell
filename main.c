@@ -6,34 +6,38 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:40:29 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/14 19:02:15 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(void)
+int	main(void)
 {
 	int		loop;
 	char	*line;
 	char	**split;
 
 	loop = 1;
-	printf("%d\n", ft_strcmp("a", "A"));
 	while (loop > 0)
 	{
 		loop = prompt_line(&line);
-		split = ft_split(line, ' ');
+		//split and loop in file tokenization.c ?
+		//To do: split on ';' then loop with split on ' '
+		split = ft_split(line, ' '); //lexer?
+		call_builtin(split);
+		/*
 		for(int i = 0; split[i]; i++)
 		{
-			ft_putstr_fd(split[i], 1);
-			ft_putchar_fd('\n', 1);
+			//To do:
+			ft_putstr_fd(split[i], stdout);
+			ft_putchar_fd('\n', stdout);
 		}
-		for(int i = 0; split[i]; i++)
+		*/
+		for (int i = 0; split[i]; i++)
 			free(split[i]);
 		free(split);
 		free(line);
 	}
-	//fonction de free
-
+	//Free function
 }

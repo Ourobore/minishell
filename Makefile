@@ -1,4 +1,6 @@
-SRCS	=	$(DIR)/prompt.c
+SRCS	=	$(DIR)/prompt.c \
+			$(DIR)/execute.c \
+			$(DIR)/builtin_echo.c
 
 DIR		=	./srcs
 
