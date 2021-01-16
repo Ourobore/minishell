@@ -1,6 +1,7 @@
 SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/execute.c \
-			$(DIR)/builtin_echo.c
+			$(DIR)/builtin_echo.c \
+			$(DIR)/builtin_pwd.c
 
 DIR		=	./srcs
 
@@ -24,7 +25,7 @@ all		:	$(NAME)
 $(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
 			#$(CC) $(CFLAGS) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
-			$(CC) $(CFLAGS) -g -fsanitize=address main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) -g3 -fsanitize=address main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 clean	:
 			@make clean -C ./libft

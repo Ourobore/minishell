@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/16 16:48:38 by lchapren         ###   ########.fr       */
+/*   Created: 2021/01/16 15:14:07 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/16 17:01:44 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../minishell.h"
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <fcntl.h>
-# include <errno.h>
-# include <stdio.h>
+int	builtin_pwd(void)
+{
+	char	*pwd;
+	size_t	buf_size;
 
-# include "libft/libft.h"
-
-int	prompt_line(char **line);
-
-//Built ins
-int	call_builtin(char **token);
-int	builtin_echo(char **token);
-int	builtin_pwd(void);
-
-#endif
+	pwd = NULL;
+	buf_size = 1;
+	pwd = getcwd(pwd, buf_size);
+	while (errno == ERANGE)
+	{
+		errno = 0;
+		buf_size++;
+		pwd = getcwd(pwd, buf_size);
+	}
+	ft_putstr_fd(pwd, 1);
+	ft_putchar_fd('\n', 1);
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 19:02:15 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/16 17:17:33 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,31 @@
 
 int	main(void)
 {
+	int		i;
 	int		loop;
 	char	*line;
-	char	**split;
+	char	**tokens;
+	char	**cmd_split;
 
 	loop = 1;
 	while (loop > 0)
 	{
+		i = 0;
 		loop = prompt_line(&line);
 		//split and loop in file tokenization.c ?
-		//To do: split on ';' then loop with split on ' '
-		split = ft_split(line, ' '); //lexer?
-		call_builtin(split);
-		/*
-		for(int i = 0; split[i]; i++)
+		cmd_split = ft_split(line, ';');
+		while (cmd_split[i])
 		{
-			//To do:
-			ft_putstr_fd(split[i], stdout);
-			ft_putchar_fd('\n', stdout);
+			tokens = ft_split(cmd_split[i], ' '); //lexer?
+			call_builtin(tokens);
+			for (int y = 0; tokens[y]; y++)
+				free(tokens[y]);
+			free(tokens);
+			free(cmd_split[i]);
+			i++;
 		}
-		*/
-		for (int i = 0; split[i]; i++)
-			free(split[i]);
-		free(split);
 		free(line);
+		free(cmd_split);
 	}
 	//Free function
 }
