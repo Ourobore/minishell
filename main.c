@@ -6,39 +6,54 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/16 17:17:33 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/28 11:29:17 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
-	int		i;
-	int		loop;
-	char	*line;
+	int		prompt_loop;
+	char	*line;/*
 	char	**tokens;
 	char	**cmd_split;
+	int		*status;
+	int		baby;*/
+	
 
-	loop = 1;
-	while (loop > 0)
+	prompt_loop = 1;
+	argc = argc;
+	argv = argv;
+	/*
+	printf("argc: %d\n", argc);
+	for (int i = 0; argv[i]; i++)
 	{
-		i = 0;
-		loop = prompt_line(&line);
+		printf("argv: %s\n", argv[i]);
+	}
+	for (int i = 0; envp[i]; i++)
+	{
+		printf("variable: %s\n", envp[i]);
+	}
+	*/
+	while (prompt_loop > 0)
+	{
+		prompt_line(&line);
+		prompt_loop = builtin_exit(line);
+		tokenization(line, envp);
+		/*
 		//split and loop in file tokenization.c ?
 		cmd_split = ft_split(line, ';');
 		while (cmd_split[i])
 		{
 			tokens = ft_split(cmd_split[i], ' '); //lexer?
 			call_builtin(tokens);
-			for (int y = 0; tokens[y]; y++)
-				free(tokens[y]);
-			free(tokens);
-			free(cmd_split[i]);
+			free_double_array(tokens);
 			i++;
 		}
+		free_double_array(cmd_split);
+		*/
 		free(line);
-		free(cmd_split);
 	}
 	//Free function
 }

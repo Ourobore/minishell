@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/16 15:14:07 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 08:49:53 by lchapren         ###   ########.fr       */
+/*   Created: 2021/01/28 08:56:51 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/28 10:54:43 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_pwd(void)
-{
-	char	*pwd;
-	size_t	buf_size;
+/*
+Without arguments and option, env does not sort alphabetically his variables
+*/
 
-	pwd = NULL;
-	buf_size = 1;
-	pwd = getcwd(pwd, buf_size);
-	while (errno == ERANGE)
+int	builtin_env(char *envp[])
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
 	{
-		errno = 0;
-		buf_size++;
-		pwd = getcwd(pwd, buf_size);
+		ft_putstr_fd(envp[i], 1);
+		ft_putchar_fd('\n', 1);
+		i++;
 	}
-	ft_putstr_fd(pwd, 1);
-	ft_putchar_fd('\n', 1);
-	free(pwd);
-	return (0);
+	printf("len: %d\n", i);
+	return (1);
 }

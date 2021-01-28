@@ -1,7 +1,12 @@
 SRCS	=	$(DIR)/prompt.c \
-			$(DIR)/execute.c \
+			$(DIR)/tokenization.c \
+			$(DIR)/call_builtin.c \
 			$(DIR)/builtin_echo.c \
-			$(DIR)/builtin_pwd.c
+			$(DIR)/builtin_exit.c \
+			$(DIR)/builtin_pwd.c \
+			$(DIR)/builtin_cd.c	\
+			$(DIR)/builtin_env.c \
+			$(DIR)/builtin_export.c
 
 DIR		=	./srcs
 
@@ -12,6 +17,8 @@ OBJS	:=	$(SRCS:.c=.o)
 CC		=	gcc
 
 CFLAGS	=	-Wall -Wextra -Werror
+
+FSAN	=	-g3 -fsanitize=address
 
 NAME	=	minishell
 
@@ -24,8 +31,14 @@ all		:	$(NAME)
 
 $(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
-			#$(CC) $(CFLAGS) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
-			$(CC) $(CFLAGS) -g3 -fsanitize=address main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) -g3 main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+
+fsan	:	$(OBJS) main.c
+			@make -C ./libft
+			$(CC) $(CFLAGS) $(FSAN) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+
+leaks	:	$(NAME)
+			valgrind --tool=memcheck --leak-check=full --leak-resolution=high --show-reachable=yes ./$(NAME)
 
 clean	:
 			@make clean -C ./libft
@@ -37,4 +50,4 @@ fclean	:	clean
 
 re		:	fclean all
 
-.PHONY	:	all clean fclean re
+.PHONY	:	all fsan leaks clean fclean re

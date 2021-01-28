@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   get_length_double_array.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/16 15:14:07 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 08:49:53 by lchapren         ###   ########.fr       */
+/*   Created: 2021/01/28 11:24:08 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/28 11:26:41 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../libft.h"
 
-int	builtin_pwd(void)
+size_t	get_length_double_array(char **array)
 {
-	char	*pwd;
-	size_t	buf_size;
+	size_t	i;
 
-	pwd = NULL;
-	buf_size = 1;
-	pwd = getcwd(pwd, buf_size);
-	while (errno == ERANGE)
-	{
-		errno = 0;
-		buf_size++;
-		pwd = getcwd(pwd, buf_size);
-	}
-	ft_putstr_fd(pwd, 1);
-	ft_putchar_fd('\n', 1);
-	free(pwd);
-	return (0);
+	i = 0;
+	while (array[i])
+		i++;
+	return (i);
 }

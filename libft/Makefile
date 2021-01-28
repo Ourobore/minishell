@@ -41,6 +41,8 @@ SRCS	= $(DIR)/ft_atoi.c \
 			$(DIR)/ft_lstclear_bonus.c \
 			$(DIR)/ft_lstiter_bonus.c \
 			$(DIR)/ft_lstmap_bonus.c \
+			$(DIR)/free_double_array.c \
+			$(DIR)/get_length_double_array.c \
 			$(DIR)/get_next_line.c
 
 DIR		=	./srcs

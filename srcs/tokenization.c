@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/16 15:14:07 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 08:49:53 by lchapren         ###   ########.fr       */
+/*   Created: 2021/01/17 10:06:00 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/28 10:11:24 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_pwd(void)
+int	tokenization(char *line, char *envp[])
 {
-	char	*pwd;
-	size_t	buf_size;
+	int		i;
+	char	**cmd_split;
+	char	**tokens;
 
-	pwd = NULL;
-	buf_size = 1;
-	pwd = getcwd(pwd, buf_size);
-	while (errno == ERANGE)
+	i = 0;
+	//check characters and then call split by priority?
+	cmd_split = ft_split(line, ';');
+	while (cmd_split[i])
 	{
-		errno = 0;
-		buf_size++;
-		pwd = getcwd(pwd, buf_size);
+		tokens = ft_split(cmd_split[i], ' '); //lexer?
+		//verif tokens
+		call_builtin(tokens, envp);
+		free_double_array(tokens);
+		i++;
 	}
-	ft_putstr_fd(pwd, 1);
-	ft_putchar_fd('\n', 1);
-	free(pwd);
+	free_double_array(cmd_split);
 	return (0);
 }

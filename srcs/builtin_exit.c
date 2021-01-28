@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/16 15:14:07 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 08:49:53 by lchapren         ###   ########.fr       */
+/*   Created: 2021/01/17 09:49:32 by lchapren          #+#    #+#             */
+/*   Updated: 2021/01/17 10:04:18 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_pwd(void)
+int	builtin_exit(char *line)
 {
-	char	*pwd;
-	size_t	buf_size;
-
-	pwd = NULL;
-	buf_size = 1;
-	pwd = getcwd(pwd, buf_size);
-	while (errno == ERANGE)
-	{
-		errno = 0;
-		buf_size++;
-		pwd = getcwd(pwd, buf_size);
-	}
-	ft_putstr_fd(pwd, 1);
-	ft_putchar_fd('\n', 1);
-	free(pwd);
-	return (0);
+	if (ft_strcmp(line, "exit") == 0)
+		return (0);
+	else
+		return (1);
 }
