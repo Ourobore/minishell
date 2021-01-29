@@ -6,13 +6,13 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 10:06:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/28 10:11:24 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/29 11:23:56 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	tokenization(char *line, char *envp[])
+int	tokenization(char *line, char **envp[])
 {
 	int		i;
 	char	**cmd_split;
@@ -21,6 +21,7 @@ int	tokenization(char *line, char *envp[])
 	i = 0;
 	//check characters and then call split by priority?
 	cmd_split = ft_split(line, ';');
+	//print_export(alphabetically_sort_env(*envp));
 	while (cmd_split[i])
 	{
 		tokens = ft_split(cmd_split[i], ' '); //lexer?

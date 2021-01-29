@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 17:44:23 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/28 11:26:59 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/28 14:49:21 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ typedef struct s_list
 int					get_next_line(int fd, char **line);
 void				free_double_array(char **array);
 size_t				get_length_double_array(char **array);
-
-
 
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);

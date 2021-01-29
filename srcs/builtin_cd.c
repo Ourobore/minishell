@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 17:46:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 08:49:03 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/28 15:01:43 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	builtin_cd(char *path)
 	if (path[0] == '/')
 		chdir("/");
 	token = ft_split(path, '/');
+	//Non verification of real path + need PWD and OLDPWD change in envp
 	while (token[i] && ret == 0)
 	{
 		//printf("%d: %s\n", i, token[i]);

@@ -6,13 +6,13 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/28 11:29:17 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/29 11:03:29 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char *envp[])
 {
 	int		prompt_loop;
 	char	*line;/*
@@ -40,7 +40,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		prompt_line(&line);
 		prompt_loop = builtin_exit(line);
-		tokenization(line, envp);
+		tokenization(line, &envp);
 		/*
 		//split and loop in file tokenization.c ?
 		cmd_split = ft_split(line, ';');

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 10:02:15 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/29 18:43:23 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,5 @@ int	prompt_line(char **line)
 	//if (ft_strcmp(*line, "exit") == 0)
 	//	return (0);
 	//else
-		return (1);
+	return (1);
 }

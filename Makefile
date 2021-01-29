@@ -6,7 +6,8 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/builtin_pwd.c \
 			$(DIR)/builtin_cd.c	\
 			$(DIR)/builtin_env.c \
-			$(DIR)/builtin_export.c
+			$(DIR)/builtin_export.c \
+			$(DIR)/builtin_unset.c
 
 DIR		=	./srcs
 
