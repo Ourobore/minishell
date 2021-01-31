@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/29 11:03:29 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/01/31 17:04:25 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,45 +15,59 @@
 int	main(int argc, char **argv, char *envp[])
 {
 	int		prompt_loop;
-	char	*line;/*
-	char	**tokens;
-	char	**cmd_split;
-	int		*status;
-	int		baby;*/
+	char	*line;
+	char	**envp_copy;
 	
-
-	prompt_loop = 1;
 	argc = argc;
 	argv = argv;
-	/*
-	printf("argc: %d\n", argc);
-	for (int i = 0; argv[i]; i++)
+	prompt_loop = 1;
+	envp_copy = copy_envp(envp);
+
+	DIR	*dir;
+	struct dirent *entity;
+	//dir = NULL;
+	dir = opendir(".");
+	entity = readdir(dir);
+	int ret;
+	struct stat buf;
+	while (entity)
 	{
-		printf("argv: %s\n", argv[i]);
+		ret = stat(entity->d_name, &buf);
+		ret++;
+		printf("%s [%u] {%u} (%d) |%d|\n", entity->d_name, entity->d_type, entity->d_reclen, buf.st_mode, buf.st_mode & S_IXGRP);
+		entity = readdir(dir);
 	}
-	for (int i = 0; envp[i]; i++)
-	{
-		printf("variable: %s\n", envp[i]);
-	}
-	*/
+	closedir(dir);
+	if (!envp_copy)
+		return (1) ;
 	while (prompt_loop > 0)
 	{
 		prompt_line(&line);
 		prompt_loop = builtin_exit(line);
-		tokenization(line, &envp);
-		/*
-		//split and loop in file tokenization.c ?
-		cmd_split = ft_split(line, ';');
-		while (cmd_split[i])
-		{
-			tokens = ft_split(cmd_split[i], ' '); //lexer?
-			call_builtin(tokens);
-			free_double_array(tokens);
-			i++;
-		}
-		free_double_array(cmd_split);
-		*/
+		tokenization(line, &envp_copy);
 		free(line);
 	}
+	free_double_array(envp_copy);
 	//Free function
+	return (0);
+}
+
+char **copy_envp(char *envp[])
+{
+	int		i;
+	int		length;
+	char	**copy;
+
+	length = get_length_double_array(envp);
+	copy = NULL;
+	copy = ft_calloc(sizeof(char*), length + 1);
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (envp[i])
+	{
+		copy[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	return (copy);
 }
