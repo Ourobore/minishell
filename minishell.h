@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/31 15:04:08 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/01 10:28:26 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,16 @@ int		builtin_unset(char **token, char **envp[]);
 int		add_token_in_envp(char *token, char **envp[]);
 int		modify_token_in_envp(char *token, int token_index, char **envp[]);
 int		search_token_in_envp(char *token, char *envp[]);
+
+//Execution functions
+int		exec_command(char **command, char *envp[]);
+int		execute_path(char *exec_path, char **command, char *envp[]);
+char	*search_executable_in_path(char *executable, char **path);
 int		remove_token_in_envp(int token_index, char **envp[]);
+char	*is_an_executable(char *file_path, char *file_name);
 char	*get_token_value_in_envp(char *token, char *envp[]);
+int		is_absolute_or_relative_path(char *path);
+char	**get_env_path(char *envp[]);
 
 //Utility functions
 int		is_directory(char *token);
@@ -61,8 +69,7 @@ char	**alphabetical_bubble_sort(char **array);
 int		print_export(char **sorted_env);
 int		nb_cd_args(char **token);
 int		verify_cd_args(char **token, char *envp[]);
-
-
+int		directory_exists(char *dir_path);
 
 void	update_pwd_envp(char *oldpwd, char **envp[]);
 

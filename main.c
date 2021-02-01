@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/31 17:04:25 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/01 09:50:03 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char *envp[])
 	argv = argv;
 	prompt_loop = 1;
 	envp_copy = copy_envp(envp);
-
+/*
 	DIR	*dir;
 	struct dirent *entity;
 	//dir = NULL;
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char *envp[])
 		printf("%s [%u] {%u} (%d) |%d|\n", entity->d_name, entity->d_type, entity->d_reclen, buf.st_mode, buf.st_mode & S_IXGRP);
 		entity = readdir(dir);
 	}
-	closedir(dir);
+	closedir(dir);*/
 	if (!envp_copy)
 		return (1) ;
 	while (prompt_loop > 0)

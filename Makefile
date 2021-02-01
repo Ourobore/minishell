@@ -8,7 +8,9 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/builtin_env.c \
 			$(DIR)/builtin_export.c \
 			$(DIR)/builtin_unset.c \
-			$(DIR)/envp_utils.c
+			$(DIR)/envp_utils.c \
+			$(DIR)/execute.c \
+			$(DIR)/utils.c
 
 DIR		=	./srcs
 
