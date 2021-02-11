@@ -6,12 +6,11 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:09:34 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/30 17:10:13 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/01 14:52:01 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 int	add_token_in_envp(char *token, char **envp[])
 {

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 09:19:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/29 22:06:49 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/09 14:18:25 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	builtin_export(char **token, char **envp[])
 			i++;
 		}
 	}
-	return (1);
+	return (0);
 }
 
 int	print_export(char **sorted_env)

@@ -10,7 +10,9 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/builtin_unset.c \
 			$(DIR)/envp_utils.c \
 			$(DIR)/execute.c \
-			$(DIR)/utils.c
+			$(DIR)/execute_utils.c \
+			$(DIR)/env_variable.c \
+			$(DIR)/pipes.c
 
 DIR		=	./srcs
 

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 17:46:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/30 14:54:58 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/09 14:17:15 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,21 @@ int	builtin_cd(char **token, char **envp[])
 	ret = 0;
 	oldpwd = get_pwd();
 	ret = verify_cd_args(token, *envp);
-	if (ret == 0)
-		chdir(token[1]);
 	if (ret == 1)
 	{
 		home_path = get_token_value_in_envp("HOME", *envp);
 		chdir(home_path);
 		free(home_path);
 	}
+	if (ret == 0)
+		chdir(token[1]);
 	update_pwd_envp(oldpwd, envp);
 	//free_double_array(token);
-	return (ret);
+	return (0);
 }
 
 int	verify_cd_args(char **token, char *envp[])
 {
-	char	*pwd;
 	int		exit_status;
 	int		nb_args;
 
@@ -57,10 +56,7 @@ int	verify_cd_args(char **token, char *envp[])
 	}
 	else
 	{
-		pwd = get_pwd();
-		exit_status = chdir(token[1]);
-		chdir(pwd);
-		free(pwd);
+		exit_status = directory_exists(token[1]);
 		if (exit_status == -1)
 		{
 			ft_putendl_fd(strerror(errno), STDERR);
@@ -97,6 +93,7 @@ int	nb_cd_args(char **token)
 	return (i - 1);
 }
 
+/*
 int	is_directory(char *token)
 {
 	int				is_dir;
@@ -118,3 +115,4 @@ int	is_directory(char *token)
 	closedir(dir);
 	return (is_dir);
 }
+*/

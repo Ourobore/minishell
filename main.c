@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/01 09:50:03 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/11 16:49:33 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,66 @@ int	main(int argc, char **argv, char *envp[])
 	
 	argc = argc;
 	argv = argv;
-	prompt_loop = 1;
+	prompt_loop = 0;
 	envp_copy = copy_envp(envp);
 /*
-	DIR	*dir;
-	struct dirent *entity;
-	//dir = NULL;
-	dir = opendir(".");
-	entity = readdir(dir);
-	int ret;
-	struct stat buf;
-	while (entity)
+	int i = 0;
+	int pipe_fd[2];
+	int input_fd = 0;
+	int	child_process;
+	char *cat[] = {"/bin/cat", "main.c", NULL};
+	char *grep[] = {"/bin/grep", "include", NULL};
+	char *wc[] = {"/usr/bin/wc", NULL};
+	char *less[] = {"/usr/bin/less", NULL};
+	char **cmd[] = {cat, grep, wc, less, NULL};
+
+	while (cmd[i] != NULL)
 	{
-		ret = stat(entity->d_name, &buf);
-		ret++;
-		printf("%s [%u] {%u} (%d) |%d|\n", entity->d_name, entity->d_type, entity->d_reclen, buf.st_mode, buf.st_mode & S_IXGRP);
-		entity = readdir(dir);
+		pipe(pipe_fd);
+		child_process = fork();
+		if (child_process == -1)
+			exit(EXIT_FAILURE);
+		if (child_process == 0)
+		{
+			dup2(input_fd, 0);
+			if (cmd[i + 1] != NULL)
+				dup2(pipe_fd[1], 1);
+			close(pipe_fd[0]);
+			call_builtin(cmd[i], &envp);
+			//execve((cmd[i][0]), cmd[i], envp);
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			wait(NULL);
+			close(pipe_fd[1]);
+			input_fd = pipe_fd[0];
+			i++;
+		}
 	}
-	closedir(dir);*/
+*/
 	if (!envp_copy)
 		return (1) ;
-	while (prompt_loop > 0)
+	while (prompt_loop != -1 && prompt_loop != 255)
 	{
+		//printf("in prompt_loop\n");
 		prompt_line(&line);
-		prompt_loop = builtin_exit(line);
-		tokenization(line, &envp_copy);
+		prompt_loop = tokenization(line, &envp_copy);
+		//printf("prompt_loop: %d\n", prompt_loop);
+		//prompt_loop = builtin_exit(line);
+		//if (prompt_loop == 0)
+		//	break ;
+		//tokenization(line, &envp_copy);
 		free(line);
 	}
 	free_double_array(envp_copy);
+	if (prompt_loop == -1)
+		exit(-1);
 	//Free function
-	return (0);
+	//wait(NULL);
+	printf("exit succes\n");
+	exit(EXIT_SUCCESS);
+	//return (0);
 }
 
 char **copy_envp(char *envp[])

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 09:23:56 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/29 20:12:08 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/09 14:26:26 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	builtin_unset(char **token, char **envp[])
 			exit_status = remove_token_in_envp(token_index, envp);
 		i++;
 	}
-	return (exit_status);
+	(void)exit_status;
+	return (0);
 }
 
 int	characters_before_equal(char *token)
