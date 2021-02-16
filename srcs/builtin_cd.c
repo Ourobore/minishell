@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 17:46:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/09 14:17:15 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/14 15:34:21 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,34 +85,10 @@ void	update_pwd_envp(char *oldpwd, char **envp[])
 
 int	nb_cd_args(char **token)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (token[i])
 		i++;
 	return (i - 1);
 }
-
-/*
-int	is_directory(char *token)
-{
-	int				is_dir;
-	DIR				*dir;
-	struct dirent*	entity;
-
-	is_dir = 0;
-	dir = NULL;
-	dir = opendir(".");
-	entity = readdir(dir);
-	while (entity)
-	{
-		//printf("TYPE: %u | NAME: %s\n", entity->d_type, entity->d_name);
-		if (entity->d_type == DT_DIR && ft_strcmp(entity->d_name, token) == 0)
-			is_dir = 1;
-		entity = readdir(dir);
-	}
-	//printf("IS_DIR: %d\n", is_dir);
-	closedir(dir);
-	return (is_dir);
-}
-*/

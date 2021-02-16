@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/11 16:20:37 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/16 09:32:15 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/wait.h>
 
 # include "libft/libft.h"
+# include "cmd.h"
 
 # define STDIN 0
 # define STDOUT 1
@@ -38,15 +39,20 @@ int		tokenize_pipeline(char *command_line, char **envp[]);
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 
-int		exec_pipeline(char ***pipeline, char **envp[]);
-char	***create_pipeline(char *line);
-void	open_pipe_fd(int **pipe_fd);
-void	close_pipe_fd(int *pipe_fd);
-
-
+//Pipes
+void	call_builtin_pipe(char ***pipeline, int i, char *envp[]);
+int		exec_pipeline(char ***pipeline, char **command_line, char *envp[]);
+int		verify_pipeline(char ***pipeline, char *command_line, char *envp[]);
+int		verify_executable(char ***pipeline, char *envp[]);
+char	***create_pipeline(char *line, char *envp[]);
+int		get_pipes_number(char *command_line);
+int		get_length_pipeline(char ***pipeline);
+void	piping_and_forking(int (*pipe_fd)[2], int *child_process);
+void	free_pipeline(char ***pipeline);
 
 //Built-ins
 int		call_builtin(char **token, char **envp[]);
+int		is_builtin(char **token);
 int		builtin_echo(char **token);
 int		builtin_exit(char *line);
 int		builtin_pwd(void);
@@ -62,12 +68,10 @@ int		search_token_in_envp(char *token, char *envp[]);
 int		remove_token_in_envp(int token_index, char **envp[]);
 void	update_pwd_envp(char *oldpwd, char **envp[]);
 char	*get_token_value_in_envp(char *token, char *envp[]);
-char	**env_variable_expansion(char **command_line, char *envp[]);
-
+char	**expend_env_variable(char **command_line, char *envp[]);
 
 //Execution functions
 int		exec_command(char **command, char *envp[]);
-int		execute_path(char *exec_path, char **command, char *envp[]);
 char	*search_executable_in_path(char *executable, char **path);
 char	*search_executable_in_dir(char *executable, char *path);
 char	*is_an_executable(char *file_path, char *file_name);
@@ -76,7 +80,6 @@ int		directory_exists(char *dir_path);
 char	**get_env_path(char *envp[]);
 
 //Utility functions
-//int		is_directory(char *token);
 char	**alphabetically_sort_env(char *envp[]);
 char	**alphabetical_bubble_sort(char **array);
 int		characters_before_equal(char *token);

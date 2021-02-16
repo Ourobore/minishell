@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 08:27:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/10 16:58:54 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/14 15:34:55 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,34 +18,22 @@ int	exec_command(char **command, char *envp[])
 	char	*exec_path;
 
 	if (is_absolute_or_relative_path(command[0]))
-		execute_path(command[0], command, envp);
+	{
+		if (execve(command[0], command, envp) == -1)
+			ft_putendl_fd(strerror(errno), STDERR);
+		//execute_path(command[0], command, envp);
+	}
 	else
 	{
 		path = get_env_path(envp);
 		exec_path = search_executable_in_path(command[0], path);
+		free_double_array(path);
 		if (exec_path)
 			if (execve(exec_path, command, envp) == -1)
 				ft_putendl_fd(strerror(errno), STDERR);
 			//execute_path(exec_path, command, envp);
 		free(exec_path);
-		free_double_array(path);
 	}
-	return (1);
-}
-
-int	execute_path(char *exec_path, char **command, char *envp[])
-{
-	int	child_pid;
-	//int	status;
-
-	child_pid = fork();
-	if (child_pid == 0)
-	{
-		if (execve(exec_path, command, envp) == -1)
-			ft_putendl_fd(strerror(errno), STDERR);
-	}
-	else
-		waitpid(child_pid, NULL, 0);
 	return (1);
 }
 
