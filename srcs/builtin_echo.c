@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/14 18:18:29 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/09 14:17:37 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/25 09:31:53 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,19 @@ int	builtin_echo(char **token)
 
 	i = 1;
 	newline = 1;
-	if (ft_strcmp(token[1], "-n") == 0)
+	if (get_length_double_array(token) > 1 && ft_strcmp(token[1], "-n") == 0)
 	{
 		i = 2;
 		newline = 0;
 	}
 	while (token[i])
 	{
-		ft_putstr_fd(token[i], 1);
+		ft_putstr_fd(token[i], STDOUT);
 		if (token[i + 1])
-			ft_putchar_fd(' ', 1);
+			ft_putchar_fd(' ', STDOUT);
 		i++;
 	}
 	if (newline)
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', STDOUT);
 	return (0);
 }

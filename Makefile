@@ -12,7 +12,10 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/execute.c \
 			$(DIR)/execute_utils.c \
 			$(DIR)/env_variable.c \
-			$(DIR)/pipes.c
+			$(DIR)/pipes.c  \
+			$(DIR)/redirection.c \
+			$(DIR)/cmd_list.c \
+			$(DIR)/parsing.c
 
 DIR		=	./srcs
 

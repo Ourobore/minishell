@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   cmd.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/09 15:53:52 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/23 20:40:07 by lchapren         ###   ########.fr       */
+/*   Created: 2021/02/16 09:27:39 by lchapren          #+#    #+#             */
+/*   Updated: 2021/02/23 16:27:18 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#ifndef CMD_H
+# define CMD_H
 
-char	*prompt_line(void)
+typedef struct s_cmd
 {
-	char	*line;
+	char			**token;
+	int				redir_in;
+	int				redir_out;
+	int				ret;
+	struct s_cmd	*next;
+}					t_cmd;
 
-	ft_putstr_fd("lchapren@minishell $ ", 1);
-	if (get_next_line(0, &line) == -1)
-		return (NULL);
-	//if else to check if entry is NULL?
-	//if (ft_strcmp(*line, "exit") == 0)
-	//	return (0);
-	//else
-	return (line);
-}
+#endif

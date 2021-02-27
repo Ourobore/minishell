@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 08:27:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/14 15:34:55 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/25 14:28:01 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	exec_command(char **command, char *envp[])
 	{
 		if (execve(command[0], command, envp) == -1)
 			ft_putendl_fd(strerror(errno), STDERR);
-		//execute_path(command[0], command, envp);
 	}
 	else
 	{
@@ -31,7 +30,6 @@ int	exec_command(char **command, char *envp[])
 		if (exec_path)
 			if (execve(exec_path, command, envp) == -1)
 				ft_putendl_fd(strerror(errno), STDERR);
-			//execute_path(exec_path, command, envp);
 		free(exec_path);
 	}
 	return (1);

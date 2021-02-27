@@ -6,12 +6,12 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 10:06:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/15 14:46:08 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/22 17:14:48 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
+/*
 int	tokenization(char *line, char **envp[])
 {
 	int		i;
@@ -40,7 +40,7 @@ int	tokenization(char *line, char **envp[])
 	free_double_array(command_line);
 	return (exit_status);
 }
-
+*/
 char	***create_pipeline(char *line, char *envp[])
 {
 	int		i;
@@ -48,12 +48,14 @@ char	***create_pipeline(char *line, char *envp[])
 	char	***pipeline;
 
 	i = 0;
+	envp = envp;//to delete
 	pipe_split = ft_split(line, '|');
 	pipeline = ft_calloc(sizeof(char**), \
 get_length_double_array(pipe_split) + 1);
 	while (pipe_split[i])
 	{
-		pipeline[i] = expand_env_variable(ft_split(pipe_split[i], ' '), envp); //leak
+		pipeline[i] = ft_split(pipe_split[i], ' ');
+		//pipeline[i] = expand_env_variable(ft_split(pipe_split[i], ' '), envp); //leak
 		i++;
 	}
 	free_double_array(pipe_split);
