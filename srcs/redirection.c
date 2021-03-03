@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 09:09:48 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/25 16:21:48 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/02 10:40:25 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ int	get_redirection(t_cmd *head, char *line, int *i , char *buffer)
 		//printf("LINE[I]: %c\tI{%d}\n", line[*i], *i);
 		buffer[j++] = line[(*i)++];
 	}
+	if (ft_strlen(buffer) == 0)
+		ft_putendl_fd("Syntax error near '>'", 2);
+		//free everything
+	(*i)--;
 	int	fd;
 	if (redir_type == 1)
 	{
@@ -46,7 +50,8 @@ int	get_redirection(t_cmd *head, char *line, int *i , char *buffer)
 			ft_putendl_fd(strerror(errno), STDERR);
 		else
 		{
-			close(head->redir_in);
+			if (head->redir_in != -1)
+				close(head->redir_in);
 			head->redir_in = fd;
 		}
 	}
@@ -57,7 +62,8 @@ int	get_redirection(t_cmd *head, char *line, int *i , char *buffer)
 			ft_putendl_fd(strerror(errno), STDERR);
 		else
 		{
-			close(head->redir_out);
+			if (head->redir_out != -1)
+				close(head->redir_out);
 			head->redir_out = fd;
 		}
 	}
@@ -68,7 +74,8 @@ int	get_redirection(t_cmd *head, char *line, int *i , char *buffer)
 			ft_putendl_fd(strerror(errno), STDERR);
 		else
 		{
-			close(head->redir_out);
+			if (head->redir_out != -1)
+				close(head->redir_out);
 			head->redir_out = fd;
 		}
 	}

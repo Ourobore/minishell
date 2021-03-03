@@ -6,12 +6,70 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/27 13:23:09 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/02 10:38:40 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+int	exec_pipeline(t_cmd *head, char *line, char *envp[])
+{
+	int *pipefd;
+	int	nb_pipes;
+	int	command_number;
+	int	child_process;
+
+	nb_pipes = get_length_list(head) - 1;
+	pipefd = ft_calloc(sizeof(int), nb_pipes * 2); // to secure
+	for (int k = 0; k < nb_pipes; k++)
+		pipe(pipefd + 2 * k);
+	command_number = 0;
+	while (head != NULL)
+	{
+		child_process = fork();
+		if (child_process == 0)
+		{
+			if (command_number != 0 || head->redir_in != -1)
+			{
+				if (head->redir_in != -1)
+					dup2(head->redir_in, STDIN);
+				else
+					dup2(pipefd[(command_number - 1) * 2], STDIN);
+			}
+			if (head->next || head->redir_out != -1) // to reduce
+			{
+				if (head->redir_out != -1)
+					dup2(head->redir_out, STDOUT);
+				else
+					dup2(pipefd[command_number * 2 + 1], STDOUT);
+			}
+			for (int u = 0; u < nb_pipes * 2; u++)
+				close(pipefd[u]);
+			free(pipefd);
+			printf("BEFORE BUILTIN [%d]\n", command_number);
+			call_builtin_pipe(head, line, envp);
+			printf("AFTER BUILTIN [%d]\n", command_number);
+			exec_command(head->token, envp);
+			exit(EXIT_FAILURE);
+			//execve(head->token[0], head->token, envp);
+		}
+		head = head->next;
+		command_number++;
+	}
+	for (int y = 0; y < nb_pipes * 2; y++)
+	{
+		printf("PIPE NUMBER: [%d]\n", pipefd[y]);
+		close(pipefd[y]);
+	}
+	free(pipefd);
+	int status;
+	waitpid(child_process, &status, 0);
+	for (int a = 0; a < nb_pipes + 1; a++)
+		wait(&status);
+	return (1);
+}
+
+/*
 int	exec_pipeline(t_cmd *head, char *buffer, char *envp[])
 {
 	int	pipe_fd[2];
@@ -79,7 +137,7 @@ int	exec_pipeline(t_cmd *head, char *buffer, char *envp[])
 	close(input_fd);
 	return (exit_status);
 }
-
+*/
 void	pipes_forks_redirs(t_cmd *head, int *input_fd, int (*pipe_fd)[2], int *child_process)
 {
 	if (pipe(*pipe_fd) == -1)

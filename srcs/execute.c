@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 08:27:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/25 14:28:01 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/02/27 18:44:15 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	exec_command(char **command, char *envp[])
 
 char	*search_executable_in_path(char *executable, char **path)
 {
-	int				i;
-	char			*exec_path;
+	int		i;
+	char	*exec_path;
 
 	i = 0;
 	while (path[i])

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/23 20:42:18 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/02 18:50:40 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,6 @@ int	main(int argc, char **argv, char *envp[])
 	prompt_loop = 0;
 	envp_copy = copy_envp(envp);
 
-/*
-	t_cmd *cmd = ft_calloc(sizeof(*cmd), 1);
-	t_cmd *save = cmd;
-	add_cmd(&cmd);
-	cmd->ret = 42;
-	cmd = cmd->next;
-	add_cmd(&cmd);
-	cmd->ret = 69;
-	cmd = cmd->next;
-	add_cmd(&cmd);
-	cmd->ret = 789;
-	printf("length list: [%d]\n", get_length_list(save));
-	while (save->next != NULL)
-	{
-		printf("ret: %d\n", save->ret);
-		save = save->next;
-	}
-*/
-
 	if (!envp_copy)
 		return (1);
 	while (prompt_loop != -1 && prompt_loop != 255)
@@ -53,17 +34,13 @@ int	main(int argc, char **argv, char *envp[])
 			printf("LINE EQUAL NULL\n");
 			return (1);
 		}
-		if (verify_quotes(line) == 1)
-		{
-			ft_putendl_fd("No multilines", STDERR);
-			continue;
-		}
-		prompt_loop = parse_line(line, &envp);
-		//int test = is_in_line("\"ls\"", "ls");
-		//printf("test: %d\n", test);
-		//printf("in quote: %d\n", is_in_quotes(line, is_in_line(line, "ls")));
-		//prompt_loop = tokenization(line, &envp_copy);
-		//free(line);
+		//if (verify_quotes(line) == 1)
+		//{
+		//	ft_putendl_fd("No multilines", STDERR);
+		//	continue;
+		//}
+		prompt_loop = execution_loop(line, &envp_copy);
+		free(line);
 	}
 	free_double_array(envp_copy);
 	if (prompt_loop == -1 || prompt_loop == 255)
@@ -75,7 +52,27 @@ int	main(int argc, char **argv, char *envp[])
 	//wait(NULL);
 	printf("exit succes\n");
 	exit(EXIT_SUCCESS);
-	//return (0);
+}
+
+int	execution_loop(char *line, char **envp[])
+{
+	t_cmd	*head;
+	int		i;
+	int		exit_status;
+
+	i = 0;
+	exit_status = 1;
+	while (i != -1 && line && line[i])
+	{
+		head = ft_calloc(sizeof(*head), 1);
+		allocate_list(&head);
+		i = parse_line(line, &head, i, *envp);
+		if (i != -1)
+			exit_status = call_builtin_or_pipe(head, line, envp);
+		//close redirs
+		free_command_list(head);
+	}
+	return (exit_status);
 }
 
 char	**copy_envp(char *envp[])

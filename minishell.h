@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/25 15:52:02 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/02 18:19:28 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,14 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
-# define FDREAD 0
-# define FDWRITE 1
 
-int	verify_quotes(char *line);
+# define MINISHELL "minishell: "
+# define SYNTAX "syntax error near: "
+
 int	is_in_quotes(char *line, int pos);
-int	is_in_line(char *line, char *search);
 
 //Built-ins
-int		call_builtin_or_pipe(t_cmd *head, char *buffer, char **envp[]);
+int		call_builtin_or_pipe(t_cmd *head, char *line, char **envp[]);
 int		call_builtin(t_cmd *head, char **envp[]);
 int		is_builtin(char **token);
 int		builtin_echo(char **token);
@@ -50,14 +49,15 @@ int		builtin_unset(char **token, char **envp[]);
 
 //General functions
 char	*prompt_line(void);
+int		execution_loop(char *line, char **envp[]);
 int		tokenization(char *line, char **envp[]);
 int		tokenize_pipeline(char *command_line, char **envp[]);
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 
 //Pipes
-void	call_builtin_pipe(t_cmd *cmd, char *envp[]);
-int		exec_pipeline(t_cmd *cmd, char *buffer, char *envp[]);
+void	call_builtin_pipe(t_cmd *cmd, char *line, char *envp[]);
+int		exec_pipeline(t_cmd *cmd, char *line, char *envp[]);
 int		verify_pipeline(char ***pipeline, char *command_line, char *envp[]);
 int		verify_executable(char ***pipeline, char *envp[]);
 char	***create_pipeline(char *line, char *envp[]);
@@ -68,6 +68,8 @@ void	free_pipeline(char ***pipeline);
 
 //Redirections
 int		get_redirection(t_cmd *head, char *line, int *i , char *buffer);
+void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode);
+
 
 
 //Manipulation of envp
@@ -78,6 +80,8 @@ int		remove_token_in_envp(int token_index, char **envp[]);
 void	update_pwd_envp(char *oldpwd, char **envp[]);
 char	*get_token_value_in_envp(char *token, char *envp[]);
 char	**expend_env_variable(char **command_line, char *envp[]);
+char	*get_env_variable(char *line, int *i, char *envp[]);
+int		is_env_character(char c);
 
 //Execution functions
 int		exec_command(char **command, char *envp[]);
@@ -95,9 +99,17 @@ void	free_command_list(t_cmd *head);
 int		get_length_list(t_cmd *head);
 char	**copy_buffer_on_token(t_cmd *head, char *buffer);
 
+//Parsing
+int		parse_line(char *line, t_cmd **head, int i, char *envp[]);
+void 	add_to_token(t_cmd **tmp, char **buffer);
 
-int		parse_line(char *line, char **envp[]);
 int		is_special_character(char c);
+
+//Error handling
+void	print_syntax_error(char c);
+int		multiline_character(char *line, char c, int i);
+int		verify_quote(char *line, char c, int pos);
+
 
 
 

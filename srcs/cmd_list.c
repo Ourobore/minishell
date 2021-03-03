@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/23 16:29:30 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/02 18:47:24 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	get_length_list(t_cmd *head)
 	int	i;
 
 	i = 0;
-	while (head->next != NULL)
+	while (head != NULL)
 	{
 		head = head->next;
 		i++;
@@ -65,7 +65,12 @@ void	free_command_list(t_cmd *head)
 
 	while (head != NULL)
 	{
-		free_double_array(head->token);
+		if (head->token)
+			free_double_array(head->token);
+		if (head->redir_in != -1)
+			close(head->redir_in);
+		if (head->redir_out != -1)
+			close(head->redir_out);
 		tmp = head;
 		head = head->next;
 		free(tmp);

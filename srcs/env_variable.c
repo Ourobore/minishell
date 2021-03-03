@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 14:44:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/11 16:21:34 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/02 09:35:02 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	is_env_variable(char *token, char *envp[])
 	if (is_in_envp == -1)
 		return (0);
 	else
-		return (1);
+		return (is_in_envp);
 }
 
 char	**env_variable_expansion(char **command_line, char *envp[])
@@ -75,4 +75,41 @@ int	detect_dollar_sign(char **token)
 		i++;
 	}
 	return (-1);
+}
+
+char	*get_env_variable(char *line, int *i, char *envp[])
+{
+	int		j;
+	char	*buffer;
+	char 	*env_var;
+
+	j = 0;
+	(*i)++;
+	buffer = ft_calloc(sizeof(char), ft_strlen(line) + 1);
+	if (!buffer)
+		return (NULL);
+	while (line[*i] && line[*i] != '$' && !is_special_character(line[*i]))
+	{
+		if (!is_env_character(line[*i]))
+			env_var = NULL;
+		else
+			buffer[j++] = line[*i];
+		(*i)++;
+	}
+	(*i)--;
+	if (!is_env_variable(buffer, envp))
+		env_var = NULL;
+	else
+		env_var = get_token_value_in_envp(buffer, envp);
+	free(buffer);
+	return (env_var);
+}
+
+int	is_env_character(char c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (\
+c >= '0' && c <= '9') || c == '_')
+		return (1);
+	else
+		return (0);
 }
