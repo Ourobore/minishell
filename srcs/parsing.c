@@ -6,11 +6,24 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 10:56:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/02 21:39:32 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/04 13:08:19 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+/*
+char	*get_next_token(char *line, int *i, char *buffer)
+{
+	int	in_quote;
+
+	in_quote = 0;
+	while (line[*i])
+	{
+		if (line[*i] == '\\' && is_in_quotes(line, *i) != 1)
+
+	}
+}
+*/
 
 int	parse_line(char *line, t_cmd **head, int i, char *envp[])
 {
@@ -36,6 +49,7 @@ int	parse_line(char *line, t_cmd **head, int i, char *envp[])
 		}
 		else if (is_special_character(line[i]) && !is_in_quotes(line, i))
 		{
+			//printf("BUFFER: [%s]\n", buffer);
 			add_to_token(&tmp, &buffer);
 			free(buffer);
 			buffer = ft_calloc(sizeof(char), ft_strlen(line) + 1);
@@ -57,6 +71,8 @@ int	parse_line(char *line, t_cmd **head, int i, char *envp[])
 				tmp->redir_in = get_redirection(tmp, line, &i, buffer);
 		}
 		else if (line[i] == '\\' && line[i + 1])
+			parse_backslash(line, buffer, &i, &j);
+		/*
 		{
 			if (is_in_quotes(line, i) == 0)
 				buffer[j++] = line[i++ + 1];
@@ -70,6 +86,7 @@ int	parse_line(char *line, t_cmd **head, int i, char *envp[])
 					buffer[j++] = line[i];
 			}
 		}
+		*/
 		else if (line[i] == '$' && is_in_quotes(line, i) != 1)
 		{
 			char	*env_var;
@@ -94,7 +111,6 @@ int	parse_line(char *line, t_cmd **head, int i, char *envp[])
 			free(tmp_buffer);
 			free(env_var);
 		}
-		
 		else if (line[i] && (is_in_quotes(line, i) || (line[i] != '\'' && line[i] != '\"')))
 			buffer[j++] = line[i];
 		//else if (line[i] != '\'' && line[i] != '\"')
@@ -116,6 +132,21 @@ int	parse_line(char *line, t_cmd **head, int i, char *envp[])
 	free(buffer);
 	//printf("LENGTH [%ld]\t I [%d]\n", ft_strlen(line), i);
 	return (i);
+}
+
+void	parse_backslash(char *line, char *buffer, int *i, int *j)
+{
+	if (is_in_quotes(line, *i) == 0)
+		buffer[(*j)++] = line[(*i)++ + 1];
+	else if (is_in_quotes(line, *i) == 1)
+		buffer[(*j)++] = line[*i];
+	else if (is_in_quotes(line, *i) == 2)
+	{
+		if (line[(*i) + 1] && (line[(*i) + 1] == '\\' || line[(*i) + 1] == '$'))
+			buffer[(*j)++] = line[(*i)++ + 1];
+		else
+			buffer[(*j)++] = line[*i];
+	}
 }
 
 int	multiline_character(char *line, char c, int i)
@@ -192,6 +223,37 @@ int	is_special_character(char c)
 		return (0);
 }
 
+int	in_quotes(char *line, int pos)
+{
+	int		i;
+	int		in_single;
+	int		in_double;
+	
+	in_single = 0;
+	in_double = 0;
+	while (line[i] && i < pos)
+	{
+		if (line[i] == '\\')
+		{
+			if (in_single || in_double)
+				i++;
+			else
+				i += 2;
+		}
+		if (line[i] == '\'' && !in_double)
+			in_single = !in_single;
+		if (line[i] == '\"' && !in_single)
+			in_single = !in_single;
+		i++;
+	}
+	if (in_single)
+		return (1);
+	else if (in_double)
+		return (2);
+	else
+		return (0);
+}
+
 int	is_in_quotes(char *line, int pos)
 {
 	int	i;
@@ -207,9 +269,9 @@ int	is_in_quotes(char *line, int pos)
 			return (0);
 		if (i < pos)
 		{
-			if (line[i] == '\'' && (i != 0 && line[i - 1] != '\\'))
+			if (line[i] == '\'' && (i != 0 && line[i - 1] != '\\') && !in_double)
 				in_single = !in_single;
-			else if (line[i] == '\"' && (i != 0 && line[i - 1] != '\\'))
+			else if (line[i] == '\"' && (i != 0 && line[i - 1] != '\\') && !in_single)
 				in_double = !in_double;
 		}
 		if (i > pos)
@@ -233,9 +295,9 @@ int	verify_quote(char *line, char c, int pos)
 	i = 0;
 	in_single = 0;
 	in_double = 0;
-	while (line[i] && i < pos)
+	while (line[i])
 	{
-		if (line[i] == '\'' && is_in_quotes(line, i) != 1 && (i > 0 && line[i - 1] != '\\'))
+		//if (line[i] == '\'' && is_in_quotes(line, i) != 1 && (i > 0 && line[i - 1] != '\\'))
 		if (i == pos && c == '\'' && in_single)
 			return (1);
 		else if (i == pos && c == '\"' && in_double)

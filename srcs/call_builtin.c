@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/02 15:39:52 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/03 08:09:01 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,9 @@ int	call_builtin(t_cmd *cmd, char **envp[])
 {
 	int	ret;
 	int	save_out;
-	int save_in;
+	int	save_in;
 
 	ret = 0;
-	//for (int i = 0; head->token[i]; i++)
-	//	printf("TOKEN: %s\n", head->token[i]);
-	//printf("FD: [%d]\n", head->redir_out);
-	/*
-	if (cmd->redir_in != -1)
-	{
-		save_in = dup(STDIN);
-		dup2(head->redir_in, STDIN);
-		close(head->redir_in);
-	}
-	if (head->redir_out != -1)
-	{
-		save_out = dup(STDOUT);
-		dup2(head->redir_out, STDOUT);
-		close(head->redir_out);
-	}*/
 	builtin_redir(cmd, &save_in, &save_out, 1);
 	if (ft_strcmp(cmd->token[0], "exit") == 0)
 		ret = builtin_exit(cmd->token[0]);
@@ -65,17 +49,6 @@ int	call_builtin(t_cmd *cmd, char **envp[])
 	else if (ft_strcmp(cmd->token[0], "unset") == 0)
 		ret = builtin_unset(cmd->token, envp);
 	builtin_redir(cmd, &save_in, &save_out, 2);
-	/*
-	if (head->redir_in != -1)
-	{
-		dup2(save_in, STDIN);
-		close(save_in);
-	}
-	if (head->redir_out != -1)
-	{
-		dup2(save_out, STDOUT);
-		close(save_out);
-	}*/
 	return (ret);
 }
 
@@ -85,13 +58,11 @@ void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode)
 	{
 		*save_in = dup(STDIN);
 		dup2(cmd->redir_in, STDIN);
-		//close(cmd->redir_in);
 	}
 	if (cmd->redir_out != -1 && mode == 1)
 	{
 		*save_out = dup(STDOUT);
 		dup2(cmd->redir_out, STDOUT);
-		//close(cmd->redir_out);
 	}
 	if (cmd->redir_in != -1 && mode == 2)
 	{
@@ -104,6 +75,7 @@ void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode)
 		close(*save_out);
 	}
 }
+
 void	call_builtin_pipe(t_cmd *cmd, char *line, char *envp[])
 {
 	int	ret;

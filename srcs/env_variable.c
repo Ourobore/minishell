@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 14:44:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/02 09:35:02 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/03 09:28:49 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,31 +57,11 @@ is_env_variable(&(command_line[i][1]), envp))
 	return (command_line);
 }
 
-int	detect_dollar_sign(char **token)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (token[i])
-	{
-		j = 0;
-		while (token[i][j])
-		{
-			if (token[i][j] == '$' && token[i][j + 1] && token[i][j + 1] != '?')
-				return (i);
-			j++;
-		}
-		i++;
-	}
-	return (-1);
-}
-
 char	*get_env_variable(char *line, int *i, char *envp[])
 {
 	int		j;
 	char	*buffer;
-	char 	*env_var;
+	char	*env_var;
 
 	j = 0;
 	(*i)++;

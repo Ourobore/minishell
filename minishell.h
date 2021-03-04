@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/02 18:19:28 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/04 13:10:44 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
+# include <curses.h>
+# include <term.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -65,12 +67,15 @@ int		get_pipes_number(char *command_line);
 int		get_length_pipeline(char ***pipeline);
 void	pipes_forks_redirs(t_cmd *head, int *input_fd, int (*pipe_fd)[2], int *child_process);
 void	free_pipeline(char ***pipeline);
+void	open_close_pipes(int *pipefd, int nb_pipes, int mode);
+void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes);
+void	child_exec(t_cmd *cmd, t_cmd *head, char *line, char *envp[]);
+int		get_child_status(int child_process, int nb_pipes);
+
 
 //Redirections
 int		get_redirection(t_cmd *head, char *line, int *i , char *buffer);
 void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode);
-
-
 
 //Manipulation of envp
 int		add_token_in_envp(char *token, char **envp[]);
@@ -101,6 +106,8 @@ char	**copy_buffer_on_token(t_cmd *head, char *buffer);
 
 //Parsing
 int		parse_line(char *line, t_cmd **head, int i, char *envp[]);
+void	parse_backslash(char *line, char *buffer, int *i, int *j);
+
 void 	add_to_token(t_cmd **tmp, char **buffer);
 
 int		is_special_character(char c);
@@ -109,9 +116,6 @@ int		is_special_character(char c);
 void	print_syntax_error(char c);
 int		multiline_character(char *line, char c, int i);
 int		verify_quote(char *line, char c, int pos);
-
-
-
 
 //Utility functions
 char	**alphabetically_sort_env(char *envp[]);

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/02 18:47:24 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/03 14:05:29 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,12 @@ int	allocate_list(t_cmd **cmd)
 	(*cmd)->token = ft_calloc(sizeof(char*), 1); //maybe redondant
 	if (!(*cmd)->token)
 		return (0);
+	(*cmd)->file_in = ft_calloc(sizeof(char*), 1); //maybe redondant
+	if (!(*cmd)->file_in)
+		return (0);
+	(*cmd)->file_out = ft_calloc(sizeof(char*), 1); //maybe redondant
+	if (!(*cmd)->file_out)
+		return (0);
 	(*cmd)->redir_in = -1;
 	(*cmd)->redir_out = -1;
 	(*cmd)->ret = 0;
@@ -67,6 +73,10 @@ void	free_command_list(t_cmd *head)
 	{
 		if (head->token)
 			free_double_array(head->token);
+		if (head->file_in)
+			free_double_array(head->file_in);
+		if (head->file_out)
+			free_double_array(head->file_out);
 		if (head->redir_in != -1)
 			close(head->redir_in);
 		if (head->redir_out != -1)

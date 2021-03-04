@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:27:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/23 16:27:18 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/03 14:03:50 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 typedef struct s_cmd
 {
 	char			**token;
+	char			**file_in;
+	char			**file_out;
 	int				redir_in;
 	int				redir_out;
 	int				ret;

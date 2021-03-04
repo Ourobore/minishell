@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 17:46:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/14 15:34:21 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/03 08:12:57 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,28 @@ int	builtin_cd(char **token, char **envp[])
 	if (ret == 0)
 		chdir(token[1]);
 	update_pwd_envp(oldpwd, envp);
-	//free_double_array(token);
 	return (0);
 }
 
 int	verify_cd_args(char **token, char *envp[])
 {
-	int		exit_status;
-	int		nb_args;
-
-	nb_args = nb_cd_args(token);
-	if (nb_args == 0)
+	if (nb_cd_args(token) == 0)
 	{
 		if (search_token_in_envp("HOME", envp) == -1)
 		{
-			ft_putendl_fd("bash: cd: HOME not set", STDERR);
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 			return (-1);
 		}
 		return (1);
 	}
-	else if (nb_args > 1)
+	else if (nb_cd_args(token) > 1)
 	{
-		ft_putendl_fd("bash: cd: too many arguments", STDERR);
+		ft_putendl_fd("minishell: cd: too many arguments", STDERR);
 		return (2);
 	}
 	else
 	{
-		exit_status = directory_exists(token[1]);
-		if (exit_status == -1)
+		if (directory_exists(token[1]) == -1)
 		{
 			ft_putendl_fd(strerror(errno), STDERR);
 			return (-2);
@@ -76,7 +70,8 @@ void	update_pwd_envp(char *oldpwd, char **envp[])
 	join_pwd = ft_strjoin("PWD=", pwd);
 	join_oldpwd = ft_strjoin("OLDPWD=", oldpwd);
 	modify_token_in_envp(join_pwd, search_token_in_envp("PWD", *envp), envp);
-	modify_token_in_envp(join_oldpwd, search_token_in_envp("OLDPWD", *envp), envp);
+	modify_token_in_envp(join_oldpwd, \
+search_token_in_envp("OLDPWD", *envp), envp);
 	free(pwd);
 	free(oldpwd);
 	free(join_pwd);

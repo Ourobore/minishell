@@ -1,5 +1,4 @@
 SRCS	=	$(DIR)/prompt.c \
-			$(DIR)/tokenization.c \
 			$(DIR)/call_builtin.c \
 			$(DIR)/builtin_echo.c \
 			$(DIR)/builtin_exit.c \
@@ -40,11 +39,11 @@ all		:	$(NAME)
 
 $(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) -g3 main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) -g3 -lncurses main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 fsan	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) $(FSAN) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) $(FSAN) -lncurses main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 leaks	:	$(NAME)
 			valgrind --tool=memcheck --leak-check=full --leak-resolution=high --show-reachable=yes ./$(NAME)

@@ -6,7 +6,7 @@
 /*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/02 10:38:40 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/03 09:26:52 by lchapren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,130 +14,101 @@
 
 int	exec_pipeline(t_cmd *head, char *line, char *envp[])
 {
-	int *pipefd;
-	int	nb_pipes;
-	int	command_number;
-	int	child_process;
+	t_cmd	*cmd;
+	int		*pipefd;
+	int		nb_pipes;
+	int		command_number;
+	int		child_process;
 
+	cmd = head;
 	nb_pipes = get_length_list(head) - 1;
-	pipefd = ft_calloc(sizeof(int), nb_pipes * 2); // to secure
-	for (int k = 0; k < nb_pipes; k++)
-		pipe(pipefd + 2 * k);
+	pipefd = ft_calloc(sizeof(int), nb_pipes * 2);
+	if (!pipefd)
+		return (-1);
+	open_close_pipes(pipefd, nb_pipes, 1);
 	command_number = 0;
-	while (head != NULL)
+	while (cmd != NULL)
 	{
 		child_process = fork();
 		if (child_process == 0)
 		{
-			if (command_number != 0 || head->redir_in != -1)
-			{
-				if (head->redir_in != -1)
-					dup2(head->redir_in, STDIN);
-				else
-					dup2(pipefd[(command_number - 1) * 2], STDIN);
-			}
-			if (head->next || head->redir_out != -1) // to reduce
-			{
-				if (head->redir_out != -1)
-					dup2(head->redir_out, STDOUT);
-				else
-					dup2(pipefd[command_number * 2 + 1], STDOUT);
-			}
-			for (int u = 0; u < nb_pipes * 2; u++)
-				close(pipefd[u]);
-			free(pipefd);
-			printf("BEFORE BUILTIN [%d]\n", command_number);
-			call_builtin_pipe(head, line, envp);
-			printf("AFTER BUILTIN [%d]\n", command_number);
-			exec_command(head->token, envp);
-			exit(EXIT_FAILURE);
-			//execve(head->token[0], head->token, envp);
+			child_pipe_redir(cmd, pipefd, command_number, nb_pipes);
+			child_exec(cmd, head, line, envp);
 		}
-		head = head->next;
+		cmd = cmd->next;
 		command_number++;
 	}
-	for (int y = 0; y < nb_pipes * 2; y++)
+	open_close_pipes(pipefd, nb_pipes, 2);
+	return (get_child_status(child_process, nb_pipes));
+}
+
+void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes)
+{
+	if (head->redir_in != -1)
+		dup2(head->redir_in, STDIN);
+	else if (cmd_num != 0)
+		dup2(pipefd[(cmd_num - 1) * 2], STDIN);
+	if (head->redir_out != -1)
+		dup2(head->redir_out, STDOUT);
+	else if (head->next)
+		dup2(pipefd[cmd_num * 2 + 1], STDOUT);
+	open_close_pipes(pipefd, nb_pipes, 2);
+}
+
+void	child_exec(t_cmd *cmd, t_cmd *head, char *line, char *envp[])
+{
+	call_builtin_pipe(cmd, line, envp);
+	exec_command(cmd->token, envp);
+	ft_putendl_fd("Executable does not exists", 2);
+	free_double_array(envp);
+	free_command_list(head);
+	free(line);
+	//error handling if exec doesn't exists
+	exit(EXIT_FAILURE);
+}
+
+int	get_child_status(int child_process, int nb_pipes)
+{
+	int	i;
+	int	status;
+	int	exit_status;
+
+	exit_status = -1;
+	exit_status = waitpid(child_process, &exit_status, 0);
+	i = 0;
+	while (i < nb_pipes + 1)
 	{
-		printf("PIPE NUMBER: [%d]\n", pipefd[y]);
-		close(pipefd[y]);
-	}
-	free(pipefd);
-	int status;
-	waitpid(child_process, &status, 0);
-	for (int a = 0; a < nb_pipes + 1; a++)
 		wait(&status);
-	return (1);
+		i++;
+	}
+	return (exit_status);
+}
+
+void	open_close_pipes(int *pipefd, int nb_pipes, int mode)
+{
+	int	i;
+
+	i = 0;
+	if (mode == 1)
+	{
+		while (i < nb_pipes)
+		{
+			pipe(pipefd + 2 * i);
+			i++;
+		}
+	}
+	if (mode == 2)
+	{
+		while (i < nb_pipes * 2)
+		{
+			close(pipefd[i]);
+			i++;
+		}
+		free(pipefd);
+	}
 }
 
 /*
-int	exec_pipeline(t_cmd *head, char *buffer, char *envp[])
-{
-	int	pipe_fd[2];
-	int	input_fd;
-	int	child_process;
-	int	exit_status;
-
-	input_fd = 0;
-	exit_status = 0;
-	t_cmd *verif;
-	verif = head;
-	int count = 0;
-	//int	save_out;
-	//int	save_in;
-	while (verif != NULL)
-	{
-		count++;
-		verif = verif->next;
-	}
-	//printf("PIPE LENGTH: [%d]\n", count);
-	while (head != NULL && exit_status != -1 && exit_status != 255)
-	{
-		//printf("\n---in pipe redir in: [%d]---\n", head->redir_in);
-		//printf("---in pipe redir out: [%d]---\n", head->redir_out);
-		//printf("INPUT FD: [%d]\n", input_fd);
-		//printf("---[NEW TOKEN]---\n");
-		//for (int k = 0; head->token[k]; k++)
-		//	printf("FOR TOKEN: %s\n", head->token[k]);
-		pipes_forks_redirs(head, &input_fd, &(pipe_fd), &child_process);
-		if (child_process == 0)
-		{
-			if (head->redir_in != -1)
-				input_fd = head->redir_in;
-			dup2(input_fd, STDIN);
-			if (head->redir_out != -1)
-				pipe_fd[FDWRITE] = head->redir_out;
-			if (head->next != NULL || head->redir_out != -1)
-				dup2(pipe_fd[FDWRITE], STDOUT);
-			//if (head->redir_out != -1)
-			//	dup2(STDOUT, head->redir_out);
-			close(pipe_fd[FDREAD]);
-			exit_status = exec_command(head->token, envp);
-			free(buffer);
-			call_builtin_pipe(head, envp);
-		}
-		else
-		{
-			waitpid(child_process, &exit_status, 0);
-			//printf("PROCESS: [%d]\n", child_process);
-			//printf("INPUT_FD: [%d]\tPIPE READ: [%d]\tPIPE WRITE[%d]\n", input_fd, pipe_fd[FDREAD], pipe_fd[FDWRITE]);
-			exit_status = WEXITSTATUS(exit_status);
-			if (input_fd != 0) // important to avoid fd leak from input_fd = FDREAD
-				close(input_fd);
-			close(pipe_fd[FDWRITE]);
-			//if ()
-			//if (pipe_fd[FDREAD] != head->redir_out)
-			input_fd = pipe_fd[FDREAD];
-			//else
-			//	input_fd = 0;
-			head = head->next;
-		}
-	}
-	close(pipe_fd[FDREAD]);
-	close(pipe_fd[FDWRITE]);
-	close(input_fd);
-	return (exit_status);
-}
-*/
 void	pipes_forks_redirs(t_cmd *head, int *input_fd, int (*pipe_fd)[2], int *child_process)
 {
 	if (pipe(*pipe_fd) == -1)
@@ -197,3 +168,4 @@ void	free_pipeline(char ***pipeline)
 	}
 	free(pipeline);
 }
+*/
