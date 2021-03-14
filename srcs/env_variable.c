@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variable.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 14:44:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/03 09:28:49 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/08 08:56:42 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ char	*get_env_variable(char *line, int *i, char *envp[])
 	while (line[*i] && line[*i] != '$' && !is_special_character(line[*i]))
 	{
 		if (!is_env_character(line[*i]))
+		{
 			env_var = NULL;
+			break ;
+		}
 		else
 			buffer[j++] = line[*i];
 		(*i)++;

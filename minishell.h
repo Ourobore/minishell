@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/04 13:10:44 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/14 20:28:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
-# include <curses.h>
 # include <term.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -32,13 +31,14 @@
 # define STDOUT 1
 # define STDERR 2
 
+# define PROMPT "lchapren@minishell $ "
 # define MINISHELL "minishell: "
 # define SYNTAX "syntax error near: "
 
 int	is_in_quotes(char *line, int pos);
 
 //Built-ins
-int		call_builtin_or_pipe(t_cmd *head, char *line, char **envp[]);
+int		call_builtin_or_pipe(t_cmd **head, char *line, char **envp[]);
 int		call_builtin(t_cmd *head, char **envp[]);
 int		is_builtin(char **token);
 int		builtin_echo(char **token);
@@ -50,12 +50,17 @@ int		builtin_export(char **token, char **envp[]);
 int		builtin_unset(char **token, char **envp[]);
 
 //General functions
-char	*prompt_line(void);
 int		execution_loop(char *line, char **envp[]);
 int		tokenization(char *line, char **envp[]);
 int		tokenize_pipeline(char *command_line, char **envp[]);
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
+
+//Prompt functions
+char	*get_line(struct termios backup);
+void	set_termios(struct termios *settings);
+int	    prompt_special_caracter(char c);
+
 
 //Pipes
 void	call_builtin_pipe(t_cmd *cmd, char *line, char *envp[]);
@@ -99,14 +104,23 @@ char	**get_env_path(char *envp[]);
 
 //Linked list
 int		add_cmd(t_cmd **cmd);
-int		allocate_list(t_cmd **cmd);
+t_cmd	*allocate_list(t_cmd *cmd);
 void	free_command_list(t_cmd *head);
 int		get_length_list(t_cmd *head);
-char	**copy_buffer_on_token(t_cmd *head, char *buffer);
+char	**copy_buffer_on_array(char *buffer, char **array);
+t_lst	*add_command_line(t_lst *cmd_line);
+//t_cmd	**add_command_line(t_cmd **head);
+t_cmd	*copy_command_line(t_cmd **head, t_cmd **new_head, int i);
 
 //Parsing
-int		parse_line(char *line, t_cmd **head, int i, char *envp[]);
+//int		parse_line(char *line, t_cmd **head, int i, char *envp[]);
 void	parse_backslash(char *line, char *buffer, int *i, int *j);
+int		in_quotes(char *line, int pos);
+int		closed_quote(char *line, int pos, char quote_type);
+int		parsing_hub(char *line, t_cmd ***head, char *envp[]);
+int		parse_command_line(char *line, t_cmd **cmd, int i, char *envp[]);
+char	*get_next_token(char *line, int *i, char *buffer, char *envp[]);
+int		special_action(char *line, t_cmd **cmd, int i, char *envp[]);
 
 void 	add_to_token(t_cmd **tmp, char **buffer);
 

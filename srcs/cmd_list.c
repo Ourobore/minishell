@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/03 14:05:29 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/14 18:48:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,18 @@ int	add_cmd(t_cmd **cmd)
 {
 	t_cmd	*new;
 
-	new = ft_calloc(sizeof(*new), 1);
-	if (!new)
-		return (0);
-	if (!allocate_list(&new))
-		return (0);
 	if (!cmd)
 		return (0);
+	new = ft_calloc(sizeof(t_cmd), 1);
+	if (!new)
+		return (0);
+	new = allocate_list(new);
+	if (!new)
+	{
+		if (new)
+			free(new);
+		return (0);
+	}
 	if (!*cmd)
 	{
 		*cmd = new;
@@ -47,22 +52,25 @@ int	get_length_list(t_cmd *head)
 	return (i);
 }
 
-int	allocate_list(t_cmd **cmd)
+t_cmd	*allocate_list(t_cmd *cmd)
 {
-	(*cmd)->token = ft_calloc(sizeof(char*), 1); //maybe redondant
-	if (!(*cmd)->token)
-		return (0);
-	(*cmd)->file_in = ft_calloc(sizeof(char*), 1); //maybe redondant
-	if (!(*cmd)->file_in)
-		return (0);
-	(*cmd)->file_out = ft_calloc(sizeof(char*), 1); //maybe redondant
-	if (!(*cmd)->file_out)
-		return (0);
-	(*cmd)->redir_in = -1;
-	(*cmd)->redir_out = -1;
-	(*cmd)->ret = 0;
-	(*cmd)->next = NULL;
-	return (1);
+	ft_putendl_fd("bb", 2);
+	cmd->token = ft_calloc(sizeof(char*), 1); //maybe redondant
+	ft_putendl_fd("fail", 2);
+	if (!cmd->token)
+		return (NULL);
+	cmd->file_in = ft_calloc(sizeof(char*), 1); //maybe redondant
+	if (!cmd->file_in)
+		return (NULL);
+	cmd->file_out = ft_calloc(sizeof(char*), 1); //maybe redondant
+	if (!cmd->file_out)
+		return (NULL);
+	cmd->redir_in = -1;
+	cmd->redir_out = -1;
+	cmd->ret = 0;
+	cmd->next = NULL;
+	printf("out allocatee\n");
+	return (cmd);
 }
 
 void	free_command_list(t_cmd *head)

@@ -3,27 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   call_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/03 08:09:01 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/14 14:52:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	call_builtin_or_pipe(t_cmd *head, char *line, char **envp[])
+int	call_builtin_or_pipe(t_cmd **head, char *line, char **envp[])
 {
+	int	i;
 	int	length;
+	int	nb_cmd;
 
-	length = get_length_list(head);
-	//printf("LENGTH PIPELINE: [%d]\n", get_length_list(head));
-	//printf("IS BUILTIN: [%d]\n", is_builtin(head->token));
-	if (length == 1 && is_builtin(head->token))
-		head->ret = call_builtin(head, envp);
-	else
-		exec_pipeline(head, line, *envp);
-	return (head->ret);
+	i = 0;
+	nb_cmd = 0;
+	while (head[nb_cmd])
+		nb_cmd++;
+	printf("nb_cmd: %d\n", nb_cmd);
+	while (head[i] != NULL)
+	{
+		length = get_length_list(head[i]);
+		//printf("LENGTH PIPELINE: [%d]\n", get_length_list(head));
+		//printf("IS BUILTIN: [%d]\n", is_builtin(head->token));
+		if (length == 1 && is_builtin(head[i]->token))
+			head[i]->ret = call_builtin(head[i], envp);
+		else
+			exec_pipeline(head[i], line, *envp);
+		i++;
+	}
+	return (head[i - 1]->ret);
 }
 
 int	call_builtin(t_cmd *cmd, char **envp[])

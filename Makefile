@@ -14,7 +14,8 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/pipes.c  \
 			$(DIR)/redirection.c \
 			$(DIR)/cmd_list.c \
-			$(DIR)/parsing.c
+			$(DIR)/parsing.c \
+			$(DIR)/old_parsing.c
 
 DIR		=	./srcs
 
@@ -39,11 +40,11 @@ all		:	$(NAME)
 
 $(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) -g3 -lncurses main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) -g3 main.c $(OBJS) $(LIBFT) $(INCLUDE) -ltermcap -o $(NAME)
 
 fsan	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) $(FSAN) -lncurses main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
+			$(CC) $(CFLAGS) $(FSAN) main.c $(OBJS) $(LIBFT) $(INCLUDE) -ltermcap -o $(NAME)
 
 leaks	:	$(NAME)
 			valgrind --tool=memcheck --leak-check=full --leak-resolution=high --show-reachable=yes ./$(NAME)
