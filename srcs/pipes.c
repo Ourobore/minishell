@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/03 09:26:52 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/16 18:49:36 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	exec_pipeline(t_cmd *head, char *line, char *envp[])
+int	exec_pipeline(t_cmd *head, char *envp[])
 {
 	t_cmd	*cmd;
 	int		*pipefd;
@@ -29,11 +29,12 @@ int	exec_pipeline(t_cmd *head, char *line, char *envp[])
 	command_number = 0;
 	while (cmd != NULL)
 	{
+		open_redir_hub(&cmd);
 		child_process = fork();
 		if (child_process == 0)
 		{
 			child_pipe_redir(cmd, pipefd, command_number, nb_pipes);
-			child_exec(cmd, head, line, envp);
+			child_exec(cmd, head, envp);
 		}
 		cmd = cmd->next;
 		command_number++;
@@ -55,14 +56,13 @@ void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes)
 	open_close_pipes(pipefd, nb_pipes, 2);
 }
 
-void	child_exec(t_cmd *cmd, t_cmd *head, char *line, char *envp[])
+void	child_exec(t_cmd *cmd, t_cmd *head, char *envp[])
 {
-	call_builtin_pipe(cmd, line, envp);
+	call_builtin_pipe(cmd, envp);
 	exec_command(cmd->token, envp);
-	ft_putendl_fd("Executable does not exists", 2);
+	ft_putendl_fd(MINISHELL"Executable does not exists", 2);
 	free_double_array(envp);
 	free_command_list(head);
-	free(line);
 	//error handling if exec doesn't exists
 	exit(EXIT_FAILURE);
 }
@@ -71,17 +71,18 @@ int	get_child_status(int child_process, int nb_pipes)
 {
 	int	i;
 	int	status;
-	int	exit_status;
 
-	exit_status = -1;
-	exit_status = waitpid(child_process, &exit_status, 0);
+	waitpid(child_process, &status, 0);
+	if (WIFSIGNALED(status))
+		printf("in prout\n");
+	exit_value = WEXITSTATUS(status);
 	i = 0;
 	while (i < nb_pipes + 1)
 	{
 		wait(&status);
 		i++;
 	}
-	return (exit_status);
+	return (exit_value);
 }
 
 void	open_close_pipes(int *pipefd, int nb_pipes, int mode)
@@ -107,65 +108,3 @@ void	open_close_pipes(int *pipefd, int nb_pipes, int mode)
 		free(pipefd);
 	}
 }
-
-/*
-void	pipes_forks_redirs(t_cmd *head, int *input_fd, int (*pipe_fd)[2], int *child_process)
-{
-	if (pipe(*pipe_fd) == -1)
-	{
-		ft_putendl_fd(strerror(errno), STDERR);
-		exit(EXIT_FAILURE);
-	}
-	head=head;
-	input_fd=input_fd;
-	//if (head->redir_in != -1)
-	//	*input_fd = head->redir_in;
-	//if (head->redir_out != -1)
-	//	(*pipe_fd)[FDWRITE] = head->redir_out;
-	*child_process = fork();
-	if (*child_process == -1)
-	{
-		ft_putendl_fd(strerror(errno), STDERR);
-		exit(EXIT_FAILURE);
-	}
-}
-
-int	get_pipes_number(char *command_line)
-{
-	int	i;
-	int	pipe_count;
-
-	i = 0;
-	pipe_count = 0;
-	while (command_line[i])
-	{
-		if (command_line[i] == '|')
-			pipe_count++;
-		i++;
-	}
-	return (pipe_count);
-}
-
-int	get_length_pipeline(char ***pipeline)
-{
-	int	i;
-
-	i = 0;
-	while (pipeline[i])
-		i++;
-	return (i);
-}
-
-void	free_pipeline(char ***pipeline)
-{
-	int	i;
-
-	i = 0;
-	while (pipeline[i])
-	{
-		free_double_array(pipeline[i]);
-		i++;
-	}
-	free(pipeline);
-}
-*/

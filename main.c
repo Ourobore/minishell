@@ -6,11 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/14 09:33:12 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/16 18:50:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	exit_value;
 
 int	main(int argc, char **argv, char *envp[])
 {
@@ -21,6 +23,7 @@ int	main(int argc, char **argv, char *envp[])
 	argc = argc;
 	argv = argv;
 	prompt_loop = 0;
+	exit_value = 0;
 	envp_copy = copy_envp(envp);
 	/*
 	char *term = get_token_value_in_envp("TERM", envp_copy);
@@ -78,28 +81,37 @@ int	main(int argc, char **argv, char *envp[])
 	exit(EXIT_SUCCESS);
 }
 
-/*
 int	execution_loop(char *line, char **envp[])
 {
-	t_cmd	*head;
-	int		i;
+	t_lst	*tmp;
+	t_lst	*cmd_line;
+	int		length_line;
 	int		exit_status;
 
-	i = 0;
-	exit_status = 1;
-	while (i != -1 && line && line[i])
+	exit_status = 0;
+	length_line = ft_strlen(line);
+	cmd_line = NULL;
+	cmd_line = add_command_line(cmd_line);
+	exit_status = parsing_hub(line, &cmd_line, *envp);
+	free(line);
+	if (exit_status < 0)
+		printf("error parsing\n");
+	else if (length_line > 0)
+		exit_status = call_builtin_or_pipe(cmd_line, envp);
+	while (cmd_line != NULL)
 	{
-		head = ft_calloc(sizeof(*head), 1);
-		allocate_list(&head);
-		i = parse_line(line, &head, i, *envp);
-		if (i != -1)
-			exit_status = call_builtin_or_pipe(head, line, envp);
-		//close redirs
-		free_command_list(head);
+		tmp = cmd_line;
+		free_command_list(cmd_line->cmd);
+		cmd_line = cmd_line->next;
+		free(tmp);
 	}
+	//close redirs
+	//add function for full head free
+	//free_command_list(*head);
+	//free(head);
 	return (exit_status);
 }
-*/
+
 char	**copy_envp(char *envp[])
 {
 	int		i;

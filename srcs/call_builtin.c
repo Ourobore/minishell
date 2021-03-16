@@ -6,35 +6,28 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/14 14:52:01 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/16 18:48:15 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	call_builtin_or_pipe(t_cmd **head, char *line, char **envp[])
+int	call_builtin_or_pipe(t_lst *cmd_line, char **envp[])
 {
-	int	i;
 	int	length;
-	int	nb_cmd;
+	int	exit_status;
 
-	i = 0;
-	nb_cmd = 0;
-	while (head[nb_cmd])
-		nb_cmd++;
-	printf("nb_cmd: %d\n", nb_cmd);
-	while (head[i] != NULL)
+	exit_status = 0;
+	while (cmd_line != NULL)
 	{
-		length = get_length_list(head[i]);
-		//printf("LENGTH PIPELINE: [%d]\n", get_length_list(head));
-		//printf("IS BUILTIN: [%d]\n", is_builtin(head->token));
-		if (length == 1 && is_builtin(head[i]->token))
-			head[i]->ret = call_builtin(head[i], envp);
+		length = get_length_list(cmd_line->cmd);
+		if (length == 1 && is_builtin(cmd_line->cmd->token))
+			exit_status = call_builtin(cmd_line->cmd, envp);
 		else
-			exec_pipeline(head[i], line, *envp);
-		i++;
+			exit_status = exec_pipeline(cmd_line->cmd, *envp);
+		cmd_line = cmd_line->next;
 	}
-	return (head[i - 1]->ret);
+	return (exit_status);
 }
 
 int	call_builtin(t_cmd *cmd, char **envp[])
@@ -44,6 +37,7 @@ int	call_builtin(t_cmd *cmd, char **envp[])
 	int	save_in;
 
 	ret = 0;
+	open_redir_hub(&cmd);
 	builtin_redir(cmd, &save_in, &save_out, 1);
 	if (ft_strcmp(cmd->token[0], "exit") == 0)
 		ret = builtin_exit(cmd->token[0]);
@@ -87,7 +81,7 @@ void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode)
 	}
 }
 
-void	call_builtin_pipe(t_cmd *cmd, char *line, char *envp[])
+void	call_builtin_pipe(t_cmd *cmd, char *envp[])
 {
 	int	ret;
 
@@ -110,7 +104,6 @@ void	call_builtin_pipe(t_cmd *cmd, char *line, char *envp[])
 	{
 		free_double_array(envp);
 		free_command_list(cmd);
-		free(line);
 		exit(ret);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/14 18:48:34 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/16 18:25:41 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,45 @@ int	add_cmd(t_cmd **cmd)
 	return (1);
 }
 
+t_lst	*add_command_line(t_lst *cmd_line)
+{
+	t_cmd	*new_cmd;
+	t_lst	*new_line;
+	t_lst	*tmp;
+
+	new_cmd = ft_calloc(sizeof(*new_cmd), 1);
+	new_cmd = allocate_list(new_cmd);
+	new_line = ft_calloc(sizeof(*new_line), 1);
+	if (!new_cmd || !new_line)
+		return (NULL);
+	new_line->cmd = new_cmd;
+	new_line->next = NULL;
+	if (!cmd_line)
+		cmd_line = new_line;
+	else
+	{	
+		tmp = cmd_line;
+		while (tmp->next != NULL)
+			tmp = tmp->next;
+		tmp->next = new_line;
+	}
+	return (cmd_line);
+}
+
+t_cmd	*allocate_list(t_cmd *cmd)
+{
+	cmd->token = ft_calloc(sizeof(char*), 1);
+	if (!cmd->token)
+		return (NULL);
+	cmd->redir_file = ft_calloc(sizeof(char*), 1);
+	if (!cmd->redir_file)
+		return (NULL);
+	cmd->redir_in = -1;
+	cmd->redir_out = -1;
+	cmd->next = NULL;
+	return (cmd);
+}
+
 int	get_length_list(t_cmd *head)
 {
 	int	i;
@@ -52,27 +91,6 @@ int	get_length_list(t_cmd *head)
 	return (i);
 }
 
-t_cmd	*allocate_list(t_cmd *cmd)
-{
-	ft_putendl_fd("bb", 2);
-	cmd->token = ft_calloc(sizeof(char*), 1); //maybe redondant
-	ft_putendl_fd("fail", 2);
-	if (!cmd->token)
-		return (NULL);
-	cmd->file_in = ft_calloc(sizeof(char*), 1); //maybe redondant
-	if (!cmd->file_in)
-		return (NULL);
-	cmd->file_out = ft_calloc(sizeof(char*), 1); //maybe redondant
-	if (!cmd->file_out)
-		return (NULL);
-	cmd->redir_in = -1;
-	cmd->redir_out = -1;
-	cmd->ret = 0;
-	cmd->next = NULL;
-	printf("out allocatee\n");
-	return (cmd);
-}
-
 void	free_command_list(t_cmd *head)
 {
 	t_cmd	*tmp;
@@ -81,10 +99,8 @@ void	free_command_list(t_cmd *head)
 	{
 		if (head->token)
 			free_double_array(head->token);
-		if (head->file_in)
-			free_double_array(head->file_in);
-		if (head->file_out)
-			free_double_array(head->file_out);
+		if (head->redir_file)
+			free_double_array(head->redir_file);
 		if (head->redir_in != -1)
 			close(head->redir_in);
 		if (head->redir_out != -1)
@@ -94,28 +110,3 @@ void	free_command_list(t_cmd *head)
 		free(tmp);
 	}
 }
-
-/*
-void	get_pipeline(t_cmd **cmd, char *command_line)
-{
-
-}
-
-int	is_in_quotes(char *line, char *token)
-{
-	int	i;
-	int in_simple;
-	int	in_double;
-
-	i = 0;
-	in_simple = 0;
-	in_double = 0;
-	while (line[i])
-	{
-		if (line[i] == '\'')
-			in_simple = !in_simple;
-		if (line[i] == '\"')
-			in_double = !in_double;
-	}
-}
-*/

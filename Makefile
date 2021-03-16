@@ -14,9 +14,7 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/pipes.c  \
 			$(DIR)/redirection.c \
 			$(DIR)/cmd_list.c \
-			$(DIR)/parsing.c \
-			$(DIR)/old_parsing.c
-
+			$(DIR)/parsing.call_builtin
 DIR		=	./srcs
 
 INCLUDE	=	-I .

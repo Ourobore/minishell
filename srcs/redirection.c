@@ -3,128 +3,134 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 09:09:48 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/03 14:06:07 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:44:31 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	get_redirection(t_cmd *head, char *line, int *i , char *buffer)
+void	get_redir_name(char *line, int *i , char **buffer, char *envp[])
 {
-	int	j;
-	int	redir_type;
+	int		redir_type;
 
-	if (line[*i] == '<')
-		redir_type = 1;
-	if (line[*i] == '>')
-	{
-		if (line[(*i) + 1] == '>')
-		{
-			redir_type = 3;
-			(*i)++;
-		}
-		else
-			redir_type = 2;
-	}
+	redir_type = get_redir_type(line, i, buffer);
 	(*i)++;
 	while (line[*i] && line[*i] == ' ')
 		(*i)++;
-	j = 0;
-	while (line[*i] && !is_special_character(line[*i]))
-	{
-		//printf("LINE[I]: %c\tI{%d}\n", line[*i], *i);
-		buffer[j++] = line[(*i)++];
-	}
-	if (ft_strlen(buffer) == 0)
-		ft_putendl_fd("Syntax error near '>'", 2);
-		//free everything
-	(*i)--;
-	int	fd;
-	if (redir_type == 1)
-	{
-		fd = open(buffer, O_RDONLY);
-		if (fd == -1)
-			ft_putendl_fd(strerror(errno), STDERR);
-		else
-		{
-			if (head->redir_in != -1)
-				close(head->redir_in);
-			head->redir_in = fd;
-		}
-	}
-	if (redir_type == 2)
-	{
-		fd = open(buffer, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
-		if (fd == -1)
-			ft_putendl_fd(strerror(errno), STDERR);
-		else
-		{
-			if (head->redir_out != -1)
-				close(head->redir_out);
-			head->redir_out = fd;
-		}
-	}
-	if (redir_type == 3)
-	{
-		fd = open(buffer, O_CREAT | O_APPEND | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
-		if (fd == -1)
-			ft_putendl_fd(strerror(errno), STDERR);
-		else
-		{
-			if (head->redir_out != -1)
-				close(head->redir_out);
-			head->redir_out = fd;
-		}
-	}
-	ft_bzero(buffer, ft_strlen(buffer));
-	return (fd);
-}
-
-/*
-void open_redirections(t_cmd *head, int redir_type)
-{
-	t_cmd *cmd;
-
-	cmd = head;
-	while (cmd != NULL)
+	//while (line[*i] && !is_special_character(line[*i]))
+	*buffer = get_next_token(line, i, *buffer, envp);
+	//(*i)--;
+	printf("LENGTH BUFFER: %ld\n", ft_strlen(*buffer));
+	if (((redir_type == 1 || redir_type == 2) && ft_strlen(*buffer) == 2) || (\
+		redir_type == 3 && ft_strlen(*buffer) == 3))
 	{
 		if (redir_type == 1)
+			print_syntax_error('<');
+		else
+			print_syntax_error('>');
+		*i = -1;
 	}
+	printf("LINE: [%c]\n", line[*i]);
+	printf("FILE: [%s]\n", *buffer);
+	//function to add to redir_file
+	//free everything
 }
-*/
-void open_redir_in(t_cmd *cmd, char *buffer)
+
+int	get_redir_type(char *line, int *i, char **buffer)
 {
-	int	fd;
-	
-	//while cmd->redir_file[i]
-	fd = open(buffer, O_RDONLY);//buffer == cmd->redir_file[i]
-	if (fd == -1)
-		ft_putendl_fd(strerror(errno), STDERR);
-		//plus free and exit loop
-	else
+	buffer = buffer;
+	if (line[*i] == '<')
 	{
-		if (cmd->redir_in != -1)
-			close(cmd->redir_in);
-		cmd->redir_in = fd;
+		(*buffer)[0] = '<';
+		(*buffer)[1] = ' ';
+		return (1);
+	}
+	if (line[*i] == '>')
+	{
+		if (line[(*i) + 1] && line[(*i) + 1] == '>')
+		{
+			(*i)++;
+			(*buffer)[0] = '>';
+			(*buffer)[1] = '>';
+			(*buffer)[2] = ' ';
+			return (3);
+		}
+		else
+		{
+			(*buffer)[0] = '>';
+			(*buffer)[1] = ' ';
+			return (2);
+		}
+	}
+	return (0);
+}
+
+void	open_redir_hub(t_cmd **cmd)
+{
+	int		i;
+	int		redir_type;
+	char	*file;
+
+	i = 0;
+	while ((*cmd)->redir_file[i])
+	{
+		file = (*cmd)->redir_file[i];
+		if (file[0] == '<')
+			redir_type = 1;
+		else if (file[0] == '>')
+		{
+			if (file[1] == '>')
+				redir_type = 3;
+			else
+				redir_type = 2;
+		}
+		if (redir_type == 1)
+			open_redir_in(cmd, &file[2]);
+		else if (redir_type == 2)
+			open_redir_out(cmd, &file[2], MTRUNC);
+		else if (redir_type == 3)
+			open_redir_out(cmd, &file[3], MAPPEND);
+		i++;
 	}
 }
 
-void open_redir_out(t_cmd *cmd, char *buffer)
+void open_redir_in(t_cmd **cmd, char *file_name)
 {
 	int	fd;
 	
-	//while cmd->redir_file[i]
-	fd = open(buffer, O_RDONLY);//buffer == cmd->redir_file[i]
+	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
+	{
 		ft_putendl_fd(strerror(errno), STDERR);
+		(*cmd)->redir_in = -2;
 		//plus free and exit loop
+	}
 	else
 	{
-		if (cmd->redir_out != -1)
-			close(cmd->redir_out);
-		cmd->redir_out = fd;
+		if ((*cmd)->redir_in != -1)
+			close((*cmd)->redir_in);
+		(*cmd)->redir_in = fd;
+	}
+}
+
+void open_redir_out(t_cmd **cmd, char *file_name, int open_mode)
+{
+	int	fd;
+	
+	fd = open(file_name, open_mode, RFILE);
+	if (fd == -1)
+	{
+		ft_putendl_fd(strerror(errno), STDERR);
+		(*cmd)->redir_out = -2;
+		//plus free and exit loop
+	}
+	else
+	{
+		if ((*cmd)->redir_out != -1)
+			close((*cmd)->redir_out);
+		(*cmd)->redir_out = fd;
 	}
 }
