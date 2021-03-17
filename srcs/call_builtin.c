@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 16:39:43 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 18:18:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	call_builtin(t_cmd *cmd, t_lst *cmd_line, char **envp[])
 	else if (ft_strcmp(cmd->token[0], "unset") == 0)
 		ret = builtin_unset(cmd->token, envp);
 	builtin_redir(cmd, &save_in, &save_out, 2);
+	g_exit_value = ret;
 	return (ret);
 }
 

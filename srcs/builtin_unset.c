@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 09:23:56 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/09 14:26:26 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/17 19:05:32 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	builtin_unset(char **token, char **envp[])
 	int	exit_status;
 
 	i = 1;
+	exit_status = 0;
 	while (token[i])
 	{
 		token_index = search_token_in_envp(token[i], *envp);
@@ -26,7 +27,8 @@ int	builtin_unset(char **token, char **envp[])
 			exit_status = remove_token_in_envp(token_index, envp);
 		i++;
 	}
-	(void)exit_status;
+	if (exit_status == 1)
+		return (1);
 	return (0);
 }
 

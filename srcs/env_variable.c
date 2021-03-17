@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 14:44:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 14:31:33 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 18:52:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,22 @@ int	is_env_variable(char *token, char *envp[])
 int	is_env_character(char c)
 {
 	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (\
-c >= '0' && c <= '9') || c == '_')
+c >= '0' && c <= '9') || c == '_' || c == '=')
 		return (1);
 	else
 		return (0);
+}
+
+int	valid_token(char *token)
+{
+	int	i;
+
+	i = 0;
+	while (token[i])
+	{
+		if (!is_env_character(token[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }

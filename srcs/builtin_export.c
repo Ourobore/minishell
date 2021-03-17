@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 09:19:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 21:23:01 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 19:12:09 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 int	builtin_export(char **token, char **envp[])
 {
-	int		i;
-	int		token_index;
+	int		exit_status;
 	char	**sorted_env;
 
-	i = 1;
+	exit_status = 0;
 	if (!token[1])
 	{
 		sorted_env = alphabetically_sort_env((*envp));
@@ -26,18 +25,36 @@ int	builtin_export(char **token, char **envp[])
 		free_double_array(sorted_env);
 	}
 	else
+		exit_status = export_token(token, envp);
+	return (exit_status);
+}
+
+int	export_token(char **token, char **envp[])
+{
+	int	i;
+	int	token_index;
+	int	exit_status;
+
+	i = 1;
+	exit_status = 0;
+	while (token[i])
 	{
-		while (token[i])
+		if (!valid_token(token[i]))
+		{
+			print_not_valid_idendifier(token[i]);
+			exit_status = 1;
+		}
+		else
 		{
 			token_index = search_token_in_envp(token[i], *envp);
 			if (token_index != -1)
 				modify_token_in_envp(token[i], token_index, envp);
 			else
 				add_token_in_envp(token[i], envp);
-			i++;
 		}
+		i++;
 	}
-	return (0);
+	return (exit_status);
 }
 
 int	print_export(char **sorted_env)

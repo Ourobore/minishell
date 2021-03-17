@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 08:56:51 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/09 14:18:07 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/17 18:24:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ int	builtin_env(char *envp[])
 	i = 0;
 	while (envp[i])
 	{
-		ft_putstr_fd(envp[i], 1);
-		ft_putchar_fd('\n', 1);
+		ft_putendl_fd(envp[i], 1);
 		i++;
 	}
 	return (0);

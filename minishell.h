@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 16:55:54 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 19:30:24 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,20 +110,24 @@ void	parse_redirection(char *line, t_cmd **cmd, int *i, char *envp[]);
 void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
 void	store_dollar(char *line, char **buffer, char *var_name, char *value);
 void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
+int		multiline_character(char *line, char c, int *i);
 char	*get_next_token(char *line, int *i, char *buffer, char *envp[]);
 char	*add_on_buffer(char *buffer, char *to_add, char *line);
 //void 	add_to_token(t_cmd **tmp, char **buffer);
 
 //Error handling
 void	print_syntax_error(char c);
-int		multiline_character(char *line, char c, int *i);
+void	print_not_valid_idendifier(char *token);
 
 //Utility functions
 char	**alphabetically_sort_env(char *envp[]);
 char	**alphabetical_bubble_sort(char **array);
 int		characters_before_equal(char *token);
 int		print_export(char **sorted_env);
+int		export_token(char **token, char **envp[]);
+int		valid_token(char *token);
 int		nb_cd_args(char **token);
 int		verify_cd_args(char **token, char *envp[]);
+int		change_directory(char **token, char *envp[], int ret);
 
 #endif

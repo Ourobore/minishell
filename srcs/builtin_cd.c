@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 17:46:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/03 08:12:57 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/17 19:31:08 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,38 @@
 int	builtin_cd(char **token, char **envp[])
 {
 	int		ret;
+	int		exit_status;
 	char	*oldpwd;
+
+	exit_status = 0;
+	ret = verify_cd_args(token, *envp);
+	if (ret != 0 && ret != 1)
+		return (exit_status);
+	oldpwd = get_pwd();
+	exit_status = change_directory(token, *envp, ret);
+	update_pwd_envp(oldpwd, envp);
+	return (exit_status);
+}
+
+int	change_directory(char **token, char *envp[], int ret)
+{
 	char	*home_path;
 
-	ret = 0;
-	oldpwd = get_pwd();
-	ret = verify_cd_args(token, *envp);
 	if (ret == 1)
 	{
-		home_path = get_token_value_in_envp("HOME", *envp);
+		home_path = get_token_value_in_envp("HOME", envp);
 		chdir(home_path);
 		free(home_path);
 	}
 	if (ret == 0)
-		chdir(token[1]);
-	update_pwd_envp(oldpwd, envp);
+	{
+		if (chdir(token[1]) == -1)
+		{
+			ft_putstr_fd(MINISHELL"cd: ", 2);
+			ft_putendl_fd(strerror(errno), 2);
+			return (1);
+		}
+	}
 	return (0);
 }
 
