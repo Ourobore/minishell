@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 15:06:28 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 16:56:51 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	main(int argc, char **argv, char *envp[])
 
 int	execution_loop(char *line, char **envp[])
 {
-	t_lst	*tmp;
 	t_lst	*cmd_line;
 	int		length_line;
 	int		exit_status;
@@ -48,17 +47,11 @@ int	execution_loop(char *line, char **envp[])
 	cmd_line = add_command_line(cmd_line);
 	exit_status = parsing_hub(line, &cmd_line, *envp);
 	free(line);
-	if (exit_status < 0)
+	if (exit_status < 0) // if exit == -2 failed malloc 
 		printf("error parsing\n");
 	else if (length_line > 0)
 		exit_status = call_builtin_or_pipe(cmd_line, envp);
-	while (cmd_line != NULL)
-	{
-		tmp = cmd_line;
-		free_command_list(cmd_line->cmd);
-		cmd_line = cmd_line->next;
-		free(tmp);
-	}
+	free_command_line(cmd_line);
 	return (exit_status);
 }
 

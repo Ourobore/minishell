@@ -3,22 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:49:32 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/12 15:22:03 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/17 16:25:35 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_exit(char *line)
+int builtin_exit(char **command, t_lst *cmd_line, char *envp[])
 {
-	if (ft_strcmp(line, "exit") == 0)
-	{
-		//printf("in exit\n");
-		return (-1);
-	}
+	int length;
+	int exit_status;
+
+	ft_putendl_fd("exit", 1);
+	length = get_length_double_array(command);
+	if (length > 2)
+		ft_putendl_fd(MINISHELL "exit: too many arguments", 2);
 	else
-		return (1);
+	{
+		if (length == 1)
+			exit_status = g_exit_value;
+		else
+			exit_status = ft_atoi(command[1]);
+		free_command_line(cmd_line);
+		free_double_array(envp);
+		exit(exit_status);
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 14:54:55 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 16:55:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ extern int	g_exit_value;
 
 //Built-ins
 int		call_builtin_or_pipe(t_lst *cmd_line, char **envp[]);
-int		call_builtin(t_cmd *head, char **envp[]);
+int		call_builtin(t_cmd *head, t_lst *cmd_line, char **envp[]);
 int		is_builtin(char **token);
+int		builtin_exit(char **command, t_lst *cmd_line, char *envp[]);
 int		builtin_echo(char **token);
-int		builtin_exit(char *line);
 int		builtin_pwd(void);
 int		builtin_env(char *envp[]);
 int		builtin_cd(char **token, char **envp[]);
@@ -54,13 +54,13 @@ char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 
 //Pipes
-void	call_builtin_pipe(t_cmd *cmd, char *envp[]);
-int		exec_pipeline(t_cmd *cmd, char *envp[]);
+void	call_builtin_pipe(t_cmd *cmd, t_lst *cmd_line, char *envp[]);
+int		exec_pipeline(t_cmd *cmd, t_lst *cmd_line, char *envp[]);
 void	open_close_pipes(int *pipefd, int nb_pipes, int mode);
 void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes);
-void	child_exec(t_cmd *cmd, t_cmd *head, char *envp[]);
+void	child_exec(t_cmd *cmd, t_lst *cmd_line, char *envp[]);
 int		get_child_status(int child_process, int nb_pipes);
-void	pipe_loop(t_cmd *head, int *child_process, int **pipefd, char *envp[]);
+int		pipe_loop(t_cmd *head, int **pipefd, t_lst *cmd_line, char *envp[]);
 
 //Redirections
 void	get_redir_name(char *line, int *i, char **buffer, char *envp[]);
@@ -93,9 +93,10 @@ char	**get_env_path(char *envp[]);
 int		add_cmd(t_cmd **cmd);
 t_cmd	*allocate_list(t_cmd *cmd);
 t_lst	*add_command_line(t_lst *cmd_line);
-void	free_command_list(t_cmd *head);
 int		get_length_list(t_cmd *head);
 char	**copy_buffer_on_array(char **buffer, char **array);
+void	free_command_list(t_cmd *head);
+void	free_command_line(t_lst *cmd_line);
 
 //Parsing
 int		parsing_hub(char *line, t_lst **cmd_line, char *envp[]);

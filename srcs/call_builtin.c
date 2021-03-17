@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 18:48:15 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 16:39:43 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,25 @@
 
 int	call_builtin_or_pipe(t_lst *cmd_line, char **envp[])
 {
-	int	length;
-	int	exit_status;
+	int		length;
+	int		exit_status;
+	t_lst	*tmp;
 
+	tmp = cmd_line;
 	exit_status = 0;
-	while (cmd_line != NULL)
+	while (tmp != NULL)
 	{
-		length = get_length_list(cmd_line->cmd);
-		if (length == 1 && is_builtin(cmd_line->cmd->token))
-			exit_status = call_builtin(cmd_line->cmd, envp);
+		length = get_length_list(tmp->cmd);
+		if (length == 1 && is_builtin(tmp->cmd->token))
+			exit_status = call_builtin(tmp->cmd, cmd_line, envp);
 		else
-			exit_status = exec_pipeline(cmd_line->cmd, *envp);
-		cmd_line = cmd_line->next;
+			exit_status = exec_pipeline(tmp->cmd, cmd_line, *envp);
+		tmp = tmp->next;
 	}
 	return (exit_status);
 }
 
-int	call_builtin(t_cmd *cmd, char **envp[])
+int	call_builtin(t_cmd *cmd, t_lst *cmd_line, char **envp[])
 {
 	int	ret;
 	int	save_out;
@@ -40,7 +42,7 @@ int	call_builtin(t_cmd *cmd, char **envp[])
 	open_redir_hub(&cmd);
 	builtin_redir(cmd, &save_in, &save_out, 1);
 	if (ft_strcmp(cmd->token[0], "exit") == 0)
-		ret = builtin_exit(cmd->token[0]);
+		ret = builtin_exit(cmd->token, cmd_line, *envp);
 	else if (ft_strcmp(cmd->token[0], "echo") == 0)
 		ret = builtin_echo(cmd->token);
 	else if (ft_strcmp(cmd->token[0], "pwd") == 0)
@@ -81,13 +83,13 @@ void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode)
 	}
 }
 
-void	call_builtin_pipe(t_cmd *cmd, char *envp[])
+void	call_builtin_pipe(t_cmd *cmd, t_lst *cmd_line, char *envp[])
 {
 	int	ret;
 
 	ret = -2;
 	if (ft_strcmp(cmd->token[0], "exit") == 0)
-		ret = builtin_exit(cmd->token[0]);
+		ret = builtin_exit(cmd->token, cmd_line, envp);
 	else if (ft_strcmp(cmd->token[0], "echo") == 0)
 		ret = builtin_echo(cmd->token);
 	else if (ft_strcmp(cmd->token[0], "pwd") == 0)
@@ -103,7 +105,7 @@ void	call_builtin_pipe(t_cmd *cmd, char *envp[])
 	if (ret != -2)
 	{
 		free_double_array(envp);
-		free_command_list(cmd);
+		free_command_line(cmd_line);
 		exit(ret);
 	}
 }

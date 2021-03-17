@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 14:57:12 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 16:31:35 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	exec_pipeline(t_cmd *head, char *envp[])
+int	exec_pipeline(t_cmd *head, t_lst *cmd_line, char *envp[])
 {
 	int		*pipefd;
 	int		nb_pipes;
@@ -23,16 +23,17 @@ int	exec_pipeline(t_cmd *head, char *envp[])
 	if (!pipefd)
 		return (-2);
 	open_close_pipes(pipefd, nb_pipes, 1);
-	pipe_loop(head, &child_process, &pipefd, envp);
+	child_process = pipe_loop(head, &pipefd, cmd_line, envp);
 	open_close_pipes(pipefd, nb_pipes, 2);
 	return (get_child_status(child_process, nb_pipes));
 }
 
-void	pipe_loop(t_cmd *head, int *child_process, int **pipefd, char *envp[])
+int	pipe_loop(t_cmd *head, int **pipefd, t_lst *cmd_line, char *envp[])
 {
 	t_cmd	*cmd;
 	int		nb_pipes;
 	int		command_number;
+	int		child_process;
 
 	nb_pipes = get_length_list(head) - 1;
 	command_number = 0;
@@ -41,16 +42,17 @@ void	pipe_loop(t_cmd *head, int *child_process, int **pipefd, char *envp[])
 	{
 		open_redir_hub(&cmd);
 		if (cmd->redir_in == -2 || cmd->redir_out == -2)
-			return ;
-		*child_process = fork();
-		if (*child_process == 0)
+			return (child_process);
+		child_process = fork();
+		if (child_process == 0)
 		{
 			child_pipe_redir(cmd, *pipefd, command_number, nb_pipes);
-			child_exec(cmd, head, envp);
+			child_exec(cmd, cmd_line, envp);
 		}
 		cmd = cmd->next;
 		command_number++;
 	}
+	return (child_process);
 }
 
 void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes)
@@ -66,14 +68,13 @@ void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes)
 	open_close_pipes(pipefd, nb_pipes, 2);
 }
 
-void	child_exec(t_cmd *cmd, t_cmd *head, char *envp[])
+void	child_exec(t_cmd *cmd, t_lst *cmd_line, char *envp[])
 {
-	call_builtin_pipe(cmd, envp);
+	call_builtin_pipe(cmd, cmd_line, envp);
 	exec_command(cmd->token, envp);
-	ft_putendl_fd(MINISHELL"Executable does not exists", 2);
+	ft_putendl_fd(MINISHELL"executable does not exists", 2);
 	free_double_array(envp);
-	free_command_list(head);
-	//error handling if exec doesn't exists
+	free_command_line(cmd_line);
 	exit(EXIT_FAILURE);
 }
 

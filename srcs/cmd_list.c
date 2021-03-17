@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 21:48:46 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 16:02:18 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,20 @@ void	free_command_list(t_cmd *head)
 			close(head->redir_out);
 		tmp = head;
 		head = head->next;
+		free(tmp);
+	}
+}
+
+void	free_command_line(t_lst *cmd_line)
+{
+	t_lst	*tmp;
+
+	while (cmd_line != NULL)
+	{
+		tmp = cmd_line;
+		if (cmd_line->cmd)
+			free_command_list(cmd_line->cmd);
+		cmd_line = cmd_line->next;
 		free(tmp);
 	}
 }
