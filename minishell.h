@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 17:58:24 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 14:54:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
-# include <term.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -31,15 +30,11 @@
 # define STDOUT 1
 # define STDERR 2
 
-# define MTRUNC O_CREAT | O_TRUNC | O_WRONLY
-# define MAPPEND O_CREAT | O_APPEND | O_WRONLY
-# define RFILE S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH
-
 # define PROMPT "lchapren@minishell $ "
 # define MINISHELL "minishell: "
 # define SYNTAX "syntax error near: "
 
-extern int	exit_value;
+extern int	g_exit_value;
 
 //Built-ins
 int		call_builtin_or_pipe(t_lst *cmd_line, char **envp[]);
@@ -58,11 +53,6 @@ int		execution_loop(char *line, char **envp[]);
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 
-//Prompt functions
-char	*get_line(struct termios backup);
-void	set_termios(struct termios *settings);
-int	    prompt_special_caracter(char c);
-
 //Pipes
 void	call_builtin_pipe(t_cmd *cmd, char *envp[]);
 int		exec_pipeline(t_cmd *cmd, char *envp[]);
@@ -70,18 +60,15 @@ void	open_close_pipes(int *pipefd, int nb_pipes, int mode);
 void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes);
 void	child_exec(t_cmd *cmd, t_cmd *head, char *envp[]);
 int		get_child_status(int child_process, int nb_pipes);
-
+void	pipe_loop(t_cmd *head, int *child_process, int **pipefd, char *envp[]);
 
 //Redirections
-//int		get_redirection(t_cmd *head, char *line, int *i , char *buffer);
-void	get_redir_name(char *line, int *i , char **buffer, char *envp[]);
+void	get_redir_name(char *line, int *i, char **buffer, char *envp[]);
 int		get_redir_type(char *line, int *i, char **buffer);
 void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode);
 void	open_redir_hub(t_cmd **cmd);
-void 	open_redir_in(t_cmd **cmd, char *file_name);
-void 	open_redir_out(t_cmd **cmd, char *file_name, int open_mode);
-
-
+void	open_redir_in(t_cmd **cmd, char *file_name);
+void	open_redir_out(t_cmd **cmd, char *file_name, int open_mode);
 
 //Manipulation of envp
 int		add_token_in_envp(char *token, char **envp[]);
@@ -108,26 +95,27 @@ t_cmd	*allocate_list(t_cmd *cmd);
 t_lst	*add_command_line(t_lst *cmd_line);
 void	free_command_list(t_cmd *head);
 int		get_length_list(t_cmd *head);
-char	**copy_buffer_on_array(char *buffer, char **array);
+char	**copy_buffer_on_array(char **buffer, char **array);
 
 //Parsing
-//int		parse_line(char *line, t_cmd **head, int i, char *envp[]);
 int		parsing_hub(char *line, t_lst **cmd_line, char *envp[]);
 int		parse_command_line(char *line, t_cmd **cmd, int i, char *envp[]);
 int		in_quotes(char *line, int pos);
 int		closed_quote(char *line, int pos, char quote_type);
-int		special_action(char *line, t_cmd **cmd, int i, char *envp[]);
+int		special_action(char *line, t_cmd **cmd, int *i);
 int		is_special_character(char c);
 void	parse_backslash(char *line, char *buffer, int *i, int *j);
+void	parse_redirection(char *line, t_cmd **cmd, int *i, char *envp[]);
+void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
+void	store_dollar(char *line, char **buffer, char *var_name, char *value);
 void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
 char	*get_next_token(char *line, int *i, char *buffer, char *envp[]);
 char	*add_on_buffer(char *buffer, char *to_add, char *line);
-
-void 	add_to_token(t_cmd **tmp, char **buffer);
+//void 	add_to_token(t_cmd **tmp, char **buffer);
 
 //Error handling
 void	print_syntax_error(char c);
-int		multiline_character(char *line, char c, int i);
+int		multiline_character(char *line, char c, int *i);
 
 //Utility functions
 char	**alphabetically_sort_env(char *envp[]);

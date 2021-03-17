@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 09:19:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/09 14:18:25 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/16 21:23:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	**alphabetically_sort_env(char *envp[])
 	char	**sorted_env;
 
 	sorted_env = NULL;
-	sorted_env = ft_calloc(sizeof(char*), get_length_double_array(envp) + 1);
+	sorted_env = ft_calloc(sizeof(char *), get_length_double_array(envp) + 1);
 	if (!sorted_env)
 		return (NULL);
 	i = 0;

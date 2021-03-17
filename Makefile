@@ -1,5 +1,4 @@
-SRCS	=	$(DIR)/prompt.c \
-			$(DIR)/call_builtin.c \
+SRCS	=	$(DIR)/call_builtin.c \
 			$(DIR)/builtin_echo.c \
 			$(DIR)/builtin_exit.c \
 			$(DIR)/builtin_pwd.c \
@@ -7,14 +6,18 @@ SRCS	=	$(DIR)/prompt.c \
 			$(DIR)/builtin_env.c \
 			$(DIR)/builtin_export.c \
 			$(DIR)/builtin_unset.c \
+			$(DIR)/env_variable.c \
 			$(DIR)/envp_utils.c \
+			$(DIR)/pipes.c \
 			$(DIR)/execute.c \
 			$(DIR)/execute_utils.c \
-			$(DIR)/env_variable.c \
-			$(DIR)/pipes.c  \
 			$(DIR)/redirection.c \
+			$(DIR)/multiline.c \
 			$(DIR)/cmd_list.c \
-			$(DIR)/parsing.call_builtin
+			$(DIR)/parsing.c \
+			$(DIR)/parse_utils.c \
+			$(DIR)/error.c
+
 DIR		=	./srcs
 
 INCLUDE	=	-I .
@@ -38,11 +41,11 @@ all		:	$(NAME)
 
 $(NAME)	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) -g3 main.c $(OBJS) $(LIBFT) $(INCLUDE) -ltermcap -o $(NAME)
+			$(CC) $(CFLAGS) -g3 main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 fsan	:	$(OBJS) main.c
 			@make -C ./libft
-			$(CC) $(CFLAGS) $(FSAN) main.c $(OBJS) $(LIBFT) $(INCLUDE) -ltermcap -o $(NAME)
+			$(CC) $(CFLAGS) $(FSAN) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 leaks	:	$(NAME)
 			valgrind --tool=memcheck --leak-check=full --leak-resolution=high --show-reachable=yes ./$(NAME)

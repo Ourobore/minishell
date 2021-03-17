@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 10:23:28 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/13 16:11:03 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/17 09:02:09 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,28 @@ char	**get_env_path(char *envp[])
 	if (!path)
 		return (NULL);
 	return (path);
+}
+
+void	open_close_pipes(int *pipefd, int nb_pipes, int mode)
+{
+	int	i;
+
+	i = 0;
+	if (mode == 1)
+	{
+		while (i < nb_pipes)
+		{
+			pipe(pipefd + 2 * i);
+			i++;
+		}
+	}
+	if (mode == 2)
+	{
+		while (i < nb_pipes * 2)
+		{
+			close(pipefd[i]);
+			i++;
+		}
+		free(pipefd);
+	}
 }

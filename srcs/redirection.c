@@ -6,15 +6,15 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 09:09:48 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 14:44:31 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 09:06:13 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	get_redir_name(char *line, int *i , char **buffer, char *envp[])
+void	get_redir_name(char *line, int *i, char **buffer, char *envp[])
 {
-	int		redir_type;
+	int	redir_type;
 
 	redir_type = get_redir_type(line, i, buffer);
 	(*i)++;
@@ -75,7 +75,8 @@ void	open_redir_hub(t_cmd **cmd)
 	char	*file;
 
 	i = 0;
-	while ((*cmd)->redir_file[i])
+	while ((*cmd)->redir_file[i] && \
+		(*cmd)->redir_in != 2 && (*cmd)->redir_out != 2)
 	{
 		file = (*cmd)->redir_file[i];
 		if (file[0] == '<')
@@ -90,17 +91,17 @@ void	open_redir_hub(t_cmd **cmd)
 		if (redir_type == 1)
 			open_redir_in(cmd, &file[2]);
 		else if (redir_type == 2)
-			open_redir_out(cmd, &file[2], MTRUNC);
+			open_redir_out(cmd, &file[2], redir_type);
 		else if (redir_type == 3)
-			open_redir_out(cmd, &file[3], MAPPEND);
+			open_redir_out(cmd, &file[3], redir_type);
 		i++;
 	}
 }
 
-void open_redir_in(t_cmd **cmd, char *file_name)
+void	open_redir_in(t_cmd **cmd, char *file_name)
 {
 	int	fd;
-	
+
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
 	{
@@ -116,11 +117,16 @@ void open_redir_in(t_cmd **cmd, char *file_name)
 	}
 }
 
-void open_redir_out(t_cmd **cmd, char *file_name, int open_mode)
+void	open_redir_out(t_cmd **cmd, char *file_name, int redir_type)
 {
 	int	fd;
-	
-	fd = open(file_name, open_mode, RFILE);
+
+	if (redir_type == 2)
+		fd = open(file_name, O_CREAT | O_TRUNC | O_WRONLY, \
+				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+	else if (redir_type == 3)
+		fd = open(file_name, O_CREAT | O_APPEND | O_WRONLY, \
+				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	if (fd == -1)
 	{
 		ft_putendl_fd(strerror(errno), STDERR);

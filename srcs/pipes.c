@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 18:49:36 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/17 14:57:12 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,43 @@
 
 int	exec_pipeline(t_cmd *head, char *envp[])
 {
-	t_cmd	*cmd;
 	int		*pipefd;
 	int		nb_pipes;
-	int		command_number;
 	int		child_process;
 
-	cmd = head;
 	nb_pipes = get_length_list(head) - 1;
 	pipefd = ft_calloc(sizeof(int), nb_pipes * 2);
 	if (!pipefd)
-		return (-1);
+		return (-2);
 	open_close_pipes(pipefd, nb_pipes, 1);
+	pipe_loop(head, &child_process, &pipefd, envp);
+	open_close_pipes(pipefd, nb_pipes, 2);
+	return (get_child_status(child_process, nb_pipes));
+}
+
+void	pipe_loop(t_cmd *head, int *child_process, int **pipefd, char *envp[])
+{
+	t_cmd	*cmd;
+	int		nb_pipes;
+	int		command_number;
+
+	nb_pipes = get_length_list(head) - 1;
 	command_number = 0;
+	cmd = head;
 	while (cmd != NULL)
 	{
 		open_redir_hub(&cmd);
-		child_process = fork();
-		if (child_process == 0)
+		if (cmd->redir_in == -2 || cmd->redir_out == -2)
+			return ;
+		*child_process = fork();
+		if (*child_process == 0)
 		{
-			child_pipe_redir(cmd, pipefd, command_number, nb_pipes);
+			child_pipe_redir(cmd, *pipefd, command_number, nb_pipes);
 			child_exec(cmd, head, envp);
 		}
 		cmd = cmd->next;
 		command_number++;
 	}
-	open_close_pipes(pipefd, nb_pipes, 2);
-	return (get_child_status(child_process, nb_pipes));
 }
 
 void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes)
@@ -74,37 +84,13 @@ int	get_child_status(int child_process, int nb_pipes)
 
 	waitpid(child_process, &status, 0);
 	if (WIFSIGNALED(status))
-		printf("in prout\n");
-	exit_value = WEXITSTATUS(status);
+		printf("in WIFSIGNALED\n");
+	g_exit_value = WEXITSTATUS(status);
 	i = 0;
 	while (i < nb_pipes + 1)
 	{
 		wait(&status);
 		i++;
 	}
-	return (exit_value);
-}
-
-void	open_close_pipes(int *pipefd, int nb_pipes, int mode)
-{
-	int	i;
-
-	i = 0;
-	if (mode == 1)
-	{
-		while (i < nb_pipes)
-		{
-			pipe(pipefd + 2 * i);
-			i++;
-		}
-	}
-	if (mode == 2)
-	{
-		while (i < nb_pipes * 2)
-		{
-			close(pipefd[i]);
-			i++;
-		}
-		free(pipefd);
-	}
+	return (g_exit_value);
 }

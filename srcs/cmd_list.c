@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 18:25:41 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/16 21:48:46 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_lst	*add_command_line(t_lst *cmd_line)
 	if (!cmd_line)
 		cmd_line = new_line;
 	else
-	{	
+	{
 		tmp = cmd_line;
 		while (tmp->next != NULL)
 			tmp = tmp->next;
@@ -66,10 +66,10 @@ t_lst	*add_command_line(t_lst *cmd_line)
 
 t_cmd	*allocate_list(t_cmd *cmd)
 {
-	cmd->token = ft_calloc(sizeof(char*), 1);
+	cmd->token = ft_calloc(sizeof(char *), 1);
 	if (!cmd->token)
 		return (NULL);
-	cmd->redir_file = ft_calloc(sizeof(char*), 1);
+	cmd->redir_file = ft_calloc(sizeof(char *), 1);
 	if (!cmd->redir_file)
 		return (NULL);
 	cmd->redir_in = -1;

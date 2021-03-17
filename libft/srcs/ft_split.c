@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 07:52:54 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/16 21:10:18 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*ft_strndup(const char *s, size_t len)
 	char	*tmp;
 
 	i = 0;
-	tmp = (char*)s;
+	tmp = (char *)s;
 	if (len < ft_strlen(s))
 		taille = len;
 	else
@@ -102,7 +102,7 @@ char	**ft_split(const char *s, char c)
 		return (NULL);
 	tmp = (char *)s;
 	nb_word = nb_chaines(s, c);
-	split = ft_calloc(nb_word + 1, sizeof(char*));
+	split = ft_calloc(nb_word + 1, sizeof(char *));
 	if (!split)
 		return (NULL);
 	while (i < nb_word)
