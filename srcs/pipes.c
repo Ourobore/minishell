@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 18:22:15 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 21:09:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	pipe_loop(t_cmd *head, int **pipefd, t_lst *cmd_line, char *envp[])
 		if (open_redir_hub(&cmd))
 		{
 			child_process = fork();
+			g_cmd_line->in_fork = 1;
 			if (child_process == 0)
 			{
 				child_pipe_redir(cmd, *pipefd, command_number, nb_pipes);
@@ -80,7 +81,7 @@ void	child_exec(t_cmd *cmd, t_lst *cmd_line, char *envp[])
 	call_builtin_pipe(cmd, cmd_line, envp);
 	exec_command(cmd->token, envp);
 	ft_putendl_fd(MINISHELL"executable does not exists", 2);
-	free_command_line(cmd_line, 2);
+	free_command_line(cmd_line, 1);
 	exit(EXIT_FAILURE);
 }
 
@@ -94,11 +95,14 @@ int	get_child_status(int child_process, int nb_pipes)
 		g_cmd_line->exit_value = 128 + WTERMSIG(status);
 	else
 		g_cmd_line->exit_value = WEXITSTATUS(status);
+	if (g_cmd_line->exit_value == 131)
+		ft_putendl_fd("Quit (core dumped)", 2);
 	i = 0;
 	while (i < nb_pipes + 1)
 	{
 		wait(&status);
 		i++;
 	}
+	g_cmd_line->in_fork = 0;
 	return (g_cmd_line->exit_value);
 }

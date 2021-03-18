@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 17:44:35 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 19:24:46 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ int	execution_loop(char *line, t_lst *cmd_line, char **envp[])
 	exit_status = parsing_hub(line, cmd_line, *envp);
 	if (exit_status >= 0)
 		exit_status = call_builtin_or_pipe(cmd_line, envp);
+	//printf("in fork: %d\n", g_cmd_line->in_fork);
+	//printf("EXIT VALUE: %d\n", cmd_line->exit_value);
+	//printf("EXIT VALUE GLOBAL: %d\n", g_cmd_line->exit_value);
 	return (exit_status);
 }
 
@@ -59,6 +62,7 @@ void	initialize_cmd_line(char **envp_copy, int exit_value)
 	g_cmd_line = NULL;
 	g_cmd_line = add_command_line(g_cmd_line);
 	g_cmd_line->envp_copy = envp_copy;
+	g_cmd_line->in_fork = 0;
 	g_cmd_line->exit_value = exit_value;
 }
 

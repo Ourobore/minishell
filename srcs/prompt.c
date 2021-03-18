@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 17:35:36 by user42            #+#    #+#             */
-/*   Updated: 2021/03/18 18:28:54 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 19:18:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,27 @@
 void	sigint_handler(int signal)
 {
 	(void)signal;
-	ft_putchar_fd('\n', 1);
-	ft_putstr_fd("\033[1;33m"PROMPT"\033[0;0m", 1);
 	ft_bzero(g_cmd_line->line, ft_strlen(g_cmd_line->line));
+	printf("in_fork: %d\n", g_cmd_line->exit_value);
+	if (!g_cmd_line->in_fork)
+	{
+		g_cmd_line->exit_value = 130;
+		ft_putchar_fd('\n', 1);
+		ft_putstr_fd("\033[1;33m"PROMPT"\033[0;0m", 1);
+	}
 }
 
 void	sigquit_handler(int signal)
 {
 	(void)signal;
-	free_command_line(g_cmd_line, 2);
-	g_cmd_line = NULL;
+	
+	if (!g_cmd_line->in_fork && g_cmd_line->line[0])
+	{
+		free(g_cmd_line->line);
+		g_cmd_line->line = NULL;
+	}
+	//free_command_line(g_cmd_line, 2);
+	//g_cmd_line = NULL;
 	//exit(128 + signal);
 }
 

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 16:44:34 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 19:33:42 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ t_lst	*add_command_line(t_lst *cmd_line)
 	new_line->cmd = new_cmd;
 	new_line->line = NULL;
 	new_line->envp_copy = NULL;
+	new_line->in_fork = 0;
 	new_line->exit_value = -1;
 	new_line->next = NULL;
 	if (!cmd_line)

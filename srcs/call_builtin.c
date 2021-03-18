@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 15:26:09 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 20:12:27 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	call_builtin_pipe(t_cmd *cmd, t_lst *cmd_line, char *envp[])
 		ret = builtin_unset(cmd->token, &envp);
 	if (ret != -2)
 	{
-		free_double_array(envp);
+		printf("Exit builtin pipe. RET: %d\n", ret);
 		free_command_line(cmd_line, 2);
 		exit(ret);
 	}

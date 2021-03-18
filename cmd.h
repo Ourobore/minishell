@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:27:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 16:44:37 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:58:37 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_lst
 	struct s_cmd	*cmd;
 	char			*line;
 	char			**envp_copy;
+	int				in_fork;
 	int				exit_value;
 	struct s_lst	*next;
 }					t_lst;
