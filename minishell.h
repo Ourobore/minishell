@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 19:30:24 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 17:40:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
+# include <signal.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -34,13 +35,13 @@
 # define MINISHELL "minishell: "
 # define SYNTAX "syntax error near: "
 
-extern int	g_exit_value;
+extern t_lst	*g_cmd_line;
 
 //Built-ins
 int		call_builtin_or_pipe(t_lst *cmd_line, char **envp[]);
 int		call_builtin(t_cmd *head, t_lst *cmd_line, char **envp[]);
 int		is_builtin(char **token);
-int		builtin_exit(char **command, t_lst *cmd_line, char *envp[]);
+int		builtin_exit(char **command, t_lst *cmd_line);
 int		builtin_echo(char **token);
 int		builtin_pwd(void);
 int		builtin_env(char *envp[]);
@@ -49,9 +50,24 @@ int		builtin_export(char **token, char **envp[]);
 int		builtin_unset(char **token, char **envp[]);
 
 //General functions
-int		execution_loop(char *line, char **envp[]);
+int		execution_loop(char *line, t_lst *cmd_line, char **envp[]);
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
+char	*add_character(char *input, char c);
+char	*get_line(char *line);
+
+
+//Utility functions
+void	initialize_cmd_line(char **envp_copy, int exit_value);
+char	**alphabetically_sort_env(char *envp[]);
+char	**alphabetical_bubble_sort(char **array);
+int		characters_before_equal(char *token);
+int		print_export(char **sorted_env);
+int		export_token(char **token, char **envp[]);
+int		valid_token(char *token);
+int		nb_cd_args(char **token);
+int		verify_cd_args(char **token, char *envp[]);
+int		change_directory(char **token, char *envp[], int ret);
 
 //Pipes
 void	call_builtin_pipe(t_cmd *cmd, t_lst *cmd_line, char *envp[]);
@@ -66,9 +82,9 @@ int		pipe_loop(t_cmd *head, int **pipefd, t_lst *cmd_line, char *envp[]);
 void	get_redir_name(char *line, int *i, char **buffer, char *envp[]);
 int		get_redir_type(char *line, int *i, char **buffer);
 void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode);
-void	open_redir_hub(t_cmd **cmd);
-void	open_redir_in(t_cmd **cmd, char *file_name);
-void	open_redir_out(t_cmd **cmd, char *file_name, int open_mode);
+int		open_redir_hub(t_cmd **cmd);
+int		open_redir_in(t_cmd **cmd, char *file_name);
+int		open_redir_out(t_cmd **cmd, char *file_name, int open_mode);
 
 //Manipulation of envp
 int		add_token_in_envp(char *token, char **envp[]);
@@ -96,10 +112,10 @@ t_lst	*add_command_line(t_lst *cmd_line);
 int		get_length_list(t_cmd *head);
 char	**copy_buffer_on_array(char **buffer, char **array);
 void	free_command_list(t_cmd *head);
-void	free_command_line(t_lst *cmd_line);
+void	free_command_line(t_lst *cmd_line, int mode);
 
 //Parsing
-int		parsing_hub(char *line, t_lst **cmd_line, char *envp[]);
+int		parsing_hub(char *line, t_lst *cmd_line, char *envp[]);
 int		parse_command_line(char *line, t_cmd **cmd, int i, char *envp[]);
 int		in_quotes(char *line, int pos);
 int		closed_quote(char *line, int pos, char quote_type);
@@ -113,21 +129,13 @@ void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
 int		multiline_character(char *line, char c, int *i);
 char	*get_next_token(char *line, int *i, char *buffer, char *envp[]);
 char	*add_on_buffer(char *buffer, char *to_add, char *line);
-//void 	add_to_token(t_cmd **tmp, char **buffer);
+
+//Signals handling
+void	sigint_handler(int signal);
+void	sigquit_handler(int signal);
 
 //Error handling
 void	print_syntax_error(char c);
 void	print_not_valid_idendifier(char *token);
-
-//Utility functions
-char	**alphabetically_sort_env(char *envp[]);
-char	**alphabetical_bubble_sort(char **array);
-int		characters_before_equal(char *token);
-int		print_export(char **sorted_env);
-int		export_token(char **token, char **envp[]);
-int		valid_token(char *token);
-int		nb_cd_args(char **token);
-int		verify_cd_args(char **token, char *envp[]);
-int		change_directory(char **token, char *envp[], int ret);
 
 #endif

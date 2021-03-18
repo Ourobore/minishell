@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:24:39 by user42            #+#    #+#             */
-/*   Updated: 2021/03/17 15:01:17 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 14:36:51 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	parse_dollar(char *line, int *i, char **buffer, char *envp[])
 	if (line[*i + 1] == '?')
 	{
 		(*i)++;
-		*buffer = add_on_buffer(*buffer, ft_itoa(g_exit_value), line);
+		*buffer = add_on_buffer(*buffer, ft_itoa(g_cmd_line->exit_value), line);
 		return ;
 	}
 	var_name = ft_calloc(sizeof(char *), ft_strlen(line) + 1);

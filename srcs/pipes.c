@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 16:31:35 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:22:15 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	exec_pipeline(t_cmd *head, t_lst *cmd_line, char *envp[])
 	int		nb_pipes;
 	int		child_process;
 
+	child_process = 0;
 	nb_pipes = get_length_list(head) - 1;
 	pipefd = ft_calloc(sizeof(int), nb_pipes * 2);
 	if (!pipefd)
@@ -25,6 +26,11 @@ int	exec_pipeline(t_cmd *head, t_lst *cmd_line, char *envp[])
 	open_close_pipes(pipefd, nb_pipes, 1);
 	child_process = pipe_loop(head, &pipefd, cmd_line, envp);
 	open_close_pipes(pipefd, nb_pipes, 2);
+	if (child_process == -1)
+	{
+		cmd_line->exit_value = 1;
+		return (1);
+	}
 	return (get_child_status(child_process, nb_pipes));
 }
 
@@ -38,16 +44,17 @@ int	pipe_loop(t_cmd *head, int **pipefd, t_lst *cmd_line, char *envp[])
 	nb_pipes = get_length_list(head) - 1;
 	command_number = 0;
 	cmd = head;
+	child_process = -1;
 	while (cmd != NULL)
 	{
-		open_redir_hub(&cmd);
-		if (cmd->redir_in == -2 || cmd->redir_out == -2)
-			return (child_process);
-		child_process = fork();
-		if (child_process == 0)
+		if (open_redir_hub(&cmd))
 		{
-			child_pipe_redir(cmd, *pipefd, command_number, nb_pipes);
-			child_exec(cmd, cmd_line, envp);
+			child_process = fork();
+			if (child_process == 0)
+			{
+				child_pipe_redir(cmd, *pipefd, command_number, nb_pipes);
+				child_exec(cmd, cmd_line, envp);
+			}
 		}
 		cmd = cmd->next;
 		command_number++;
@@ -73,8 +80,7 @@ void	child_exec(t_cmd *cmd, t_lst *cmd_line, char *envp[])
 	call_builtin_pipe(cmd, cmd_line, envp);
 	exec_command(cmd->token, envp);
 	ft_putendl_fd(MINISHELL"executable does not exists", 2);
-	free_double_array(envp);
-	free_command_line(cmd_line);
+	free_command_line(cmd_line, 2);
 	exit(EXIT_FAILURE);
 }
 
@@ -85,13 +91,14 @@ int	get_child_status(int child_process, int nb_pipes)
 
 	waitpid(child_process, &status, 0);
 	if (WIFSIGNALED(status))
-		printf("in WIFSIGNALED\n");
-	g_exit_value = WEXITSTATUS(status);
+		g_cmd_line->exit_value = 128 + WTERMSIG(status);
+	else
+		g_cmd_line->exit_value = WEXITSTATUS(status);
 	i = 0;
 	while (i < nb_pipes + 1)
 	{
 		wait(&status);
 		i++;
 	}
-	return (g_exit_value);
+	return (g_cmd_line->exit_value);
 }

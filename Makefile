@@ -15,6 +15,7 @@ SRCS	=	$(DIR)/call_builtin.c \
 			$(DIR)/multiline.c \
 			$(DIR)/cmd_list.c \
 			$(DIR)/parsing.c \
+			$(DIR)/prompt.c \
 			$(DIR)/parse_utils.c \
 			$(DIR)/error.c
 
@@ -34,9 +35,6 @@ NAME	=	minishell
 
 LIBFT	=	libft/libft.a
 
-#%.o: %.c
-#			$(CC) $(CFLAGS) $< -o $@
-
 all		:	$(NAME)
 
 $(NAME)	:	$(OBJS) main.c
@@ -48,7 +46,7 @@ fsan	:	$(OBJS) main.c
 			$(CC) $(CFLAGS) $(FSAN) main.c $(OBJS) $(LIBFT) $(INCLUDE) -o $(NAME)
 
 leaks	:	$(NAME)
-			valgrind --tool=memcheck --leak-check=full --leak-resolution=high --show-reachable=yes ./$(NAME)
+			valgrind --tool=memcheck --track-origins=yes --leak-check=full --leak-resolution=high --show-reachable=yes ./$(NAME)
 
 clean	:
 			@make clean -C ./libft

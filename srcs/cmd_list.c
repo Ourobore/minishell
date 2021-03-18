@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 16:02:18 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 16:44:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ t_lst	*add_command_line(t_lst *cmd_line)
 	if (!new_cmd || !new_line)
 		return (NULL);
 	new_line->cmd = new_cmd;
+	new_line->line = NULL;
+	new_line->envp_copy = NULL;
+	new_line->exit_value = -1;
 	new_line->next = NULL;
 	if (!cmd_line)
 		cmd_line = new_line;
@@ -101,9 +104,9 @@ void	free_command_list(t_cmd *head)
 			free_double_array(head->token);
 		if (head->redir_file)
 			free_double_array(head->redir_file);
-		if (head->redir_in != -1)
+		if (head->redir_in != -1 && head->redir_out != -2)
 			close(head->redir_in);
-		if (head->redir_out != -1)
+		if (head->redir_out != -1 && head->redir_out != -2)
 			close(head->redir_out);
 		tmp = head;
 		head = head->next;
@@ -111,15 +114,19 @@ void	free_command_list(t_cmd *head)
 	}
 }
 
-void	free_command_line(t_lst *cmd_line)
+void	free_command_line(t_lst *cmd_line, int mode)
 {
 	t_lst	*tmp;
 
+	if (mode == 2)
+		free_double_array(cmd_line->envp_copy);
 	while (cmd_line != NULL)
 	{
 		tmp = cmd_line;
 		if (cmd_line->cmd)
 			free_command_list(cmd_line->cmd);
+		if (cmd_line->line)
+			free(cmd_line->line);
 		cmd_line = cmd_line->next;
 		free(tmp);
 	}

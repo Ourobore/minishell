@@ -6,20 +6,20 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 10:56:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 15:05:24 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:29:35 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	parsing_hub(char *line, t_lst **cmd_line, char *envp[])
+int	parsing_hub(char *line, t_lst *cmd_line, char *envp[])
 {
 	int		i;
 	t_lst	*tmp;
 	t_cmd	*cmd;
 
 	i = 0;
-	tmp = *cmd_line;
+	tmp = cmd_line;
 	while (line[i])
 	{
 		cmd = tmp->cmd;
