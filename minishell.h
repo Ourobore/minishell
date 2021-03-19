@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 17:40:52 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 11:12:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 char	*add_character(char *input, char c);
 char	*get_line(char *line);
+char	**copy_envp(char *envp[]);
 
 
 //Utility functions
@@ -115,7 +116,7 @@ void	free_command_list(t_cmd *head);
 void	free_command_line(t_lst *cmd_line, int mode);
 
 //Parsing
-int		parsing_hub(char *line, t_lst *cmd_line, char *envp[]);
+int		parsing_hub(char *line, t_lst *cmd_line, char *envp[], int mode);
 int		parse_command_line(char *line, t_cmd **cmd, int i, char *envp[]);
 int		in_quotes(char *line, int pos);
 int		closed_quote(char *line, int pos, char quote_type);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_double_array.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 08:42:03 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/17 08:44:47 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/19 10:42:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void	free_double_array(char **array)
 	while (array[i])
 	{
 		free(array[i]);
+		array[i] = NULL;
 		i++;
 	}
 	free(array);
+	array = NULL;
 }

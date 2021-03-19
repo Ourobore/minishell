@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:09:34 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 21:18:41 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 11:43:11 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,13 @@ int	add_token_in_envp(char *token, char **envp[])
 		free_double_array(new_envp);
 		return (-2);
 	}
-	free_double_array((*envp));
-	(*envp) = new_envp;
+	free_double_array(g_cmd_line->envp_copy);
+	g_cmd_line->envp_copy = NULL;
+	g_cmd_line->envp_copy = copy_envp(new_envp);
+	//free_double_array((*envp));
+	//(*envp) = new_envp;
+	free_double_array(new_envp);
+	//(*envp) = g_cmd_line->envp_copy;
 	return (0);
 }
 

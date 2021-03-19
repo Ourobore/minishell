@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 09:19:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 19:12:09 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 11:41:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	builtin_export(char **token, char **envp[])
 	exit_status = 0;
 	if (!token[1])
 	{
+		for(int i = 0; (*envp)[i]; i++)
+			printf("prout[i]: %s\n", (*envp)[i]);
 		sorted_env = alphabetically_sort_env((*envp));
 		print_export(sorted_env);
 		free_double_array(sorted_env);
@@ -96,8 +98,10 @@ char	**alphabetically_sort_env(char *envp[])
 	if (!sorted_env)
 		return (NULL);
 	i = 0;
+	printf("before\n");
 	while (envp[i])
 	{
+		printf("envp[i]: %s\n", envp[i]);
 		sorted_env[i] = ft_strdup(envp[i]);
 		i++;
 	}

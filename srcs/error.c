@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 14:28:04 by user42            #+#    #+#             */
-/*   Updated: 2021/03/17 18:47:22 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 08:59:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_syntax_error(char c)
 {
 	ft_putstr_fd(MINISHELL SYNTAX, 2);
-	ft_putstr_fd(&c, 2);
+	write(2, &c, 1);
 	ft_putstr_fd("\n", 2);
 }
 

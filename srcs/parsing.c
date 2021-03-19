@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 10:56:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 18:29:35 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 09:37:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	parsing_hub(char *line, t_lst *cmd_line, char *envp[])
+int	parsing_hub(char *line, t_lst *cmd_line, char *envp[], int mode)
 {
 	int		i;
 	t_lst	*tmp;
@@ -20,10 +20,13 @@ int	parsing_hub(char *line, t_lst *cmd_line, char *envp[])
 
 	i = 0;
 	tmp = cmd_line;
+
 	while (line[i])
 	{
 		cmd = tmp->cmd;
 		i = parse_command_line(line, &cmd, i, envp);
+		if (mode == 2)
+			call_builtin_or_pipe(tmp, &envp);
 		if (i < 0)
 			break ;
 		if (i < (int)ft_strlen(line))
@@ -82,6 +85,8 @@ char	*get_next_token(char *line, int *i, char *buffer, char *envp[])
 			parse_dollar(line, i, &buffer, envp);
 			j = ft_strlen(buffer);
 		}
+		else if ((line[*i] == '\'' || line[*i] == '\"') && in_quotes(line, *i))
+			buffer[j++] = line[*i];
 		else if (line[*i] != '\'' && line[*i] != '\"')
 			buffer[j++] = line[*i];
 		(*i)++;

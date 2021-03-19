@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:24:39 by user42            #+#    #+#             */
-/*   Updated: 2021/03/18 19:24:22 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 08:57:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ int	special_action(char *line, t_cmd **cmd, int *i)
 {
 	if (line[*i] == ';')
 	{
+		if (get_length_double_array((*cmd)->token) == 0)
+		{
+			print_syntax_error(line[*i]);
+			*i = -1;
+			return (-1);
+		}
 		(*i)++;
 		return (2);
 	}
@@ -60,7 +66,6 @@ void	parse_dollar(char *line, int *i, char **buffer, char *envp[])
 	if (line[*i + 1] == '?')
 	{
 		(*i)++;
-		//printf("VERIF VALUE: %d\n", g_cmd_line->exit_value);
 		*buffer = add_on_buffer(*buffer, ft_itoa(g_cmd_line->exit_value), line);
 		return ;
 	}

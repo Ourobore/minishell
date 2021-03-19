@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 20:12:27 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 08:20:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,18 @@ int	call_builtin_or_pipe(t_lst *cmd_line, char **envp[])
 
 	tmp = cmd_line;
 	exit_status = 0;
+	int counter = 0;
 	while (tmp != NULL)
 	{
 		length = get_length_list(tmp->cmd);
-		if (length == 1 && is_builtin(tmp->cmd->token))
-			exit_status = call_builtin(tmp->cmd, cmd_line, envp);
-		else
-			exit_status = exec_pipeline(tmp->cmd, cmd_line, *envp);
+		if (tmp->cmd->token[0] != NULL)
+		{
+			if (length == 1 && is_builtin(tmp->cmd->token))
+				exit_status = call_builtin(tmp->cmd, cmd_line, envp);
+			else
+				exit_status = exec_pipeline(tmp->cmd, cmd_line, *envp);
+		}
+		counter++;
 		tmp = tmp->next;
 	}
 	return (exit_status);

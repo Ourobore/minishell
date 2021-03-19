@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:23:28 by user42            #+#    #+#             */
-/*   Updated: 2021/03/17 15:01:29 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 10:34:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	multiline_character(char *line, char c, int *i)
 	{
 		if (!closed_quote(line, *i, line[*i]))
 		{
-			ret = 1;
+			ret = 1;printf("in error\n");
 			print_syntax_error(c);
 		}
 	}
@@ -50,13 +50,15 @@ int	in_quotes(char *line, int pos)
 	i = 0;
 	in_single = 0;
 	in_double = 0;
+	//printf("\n\n");
 	while (line[i] && i <= pos && pos != 0)
 	{
+		//printf("CHARAC: [%c]\tIN SINGLE: [%d]\tIN DOUBLE[%d]\n", line[i], in_single, in_double);
 		if (line[i] == '\\' && !in_single && !in_double)
 			i++;
 		else if (line[i] == '\'' && !in_double && i != pos)
 			in_single = !in_single;
-		else if (line[i] == '\"' && !in_single && i != pos)
+		else if (line[i] == '\"' && !in_single && i != pos)//
 			in_double = !in_double;
 		i++;
 	}
@@ -75,6 +77,8 @@ int	closed_quote(char *line, int pos, char quote_type)
 	i = 0;
 	in_quote = 0;
 	if (quote_type != '\'' && quote_type != '\"')
+		return (1);
+	if (in_quotes(line, pos))
 		return (1);
 	while (line[i])
 	{
