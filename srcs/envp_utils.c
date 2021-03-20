@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:09:34 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/19 11:43:11 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 21:46:07 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,11 @@ int	add_token_in_envp(char *token, char **envp[])
 		free_double_array(new_envp);
 		return (-2);
 	}
-	free_double_array(g_cmd_line->envp_copy);
-	g_cmd_line->envp_copy = NULL;
-	g_cmd_line->envp_copy = copy_envp(new_envp);
+	free_double_array(g_shell.envp_copy);
+	g_shell.envp_copy = new_envp;
 	//free_double_array((*envp));
 	//(*envp) = new_envp;
-	free_double_array(new_envp);
+	//free_double_array(new_envp);
 	//(*envp) = g_cmd_line->envp_copy;
 	return (0);
 }
@@ -108,8 +107,10 @@ char	*get_token_value_in_envp(char *token, char *envp[])
 	i = search_token_in_envp(token, envp);
 	if (i == -1)
 		return (NULL);
-	while (envp[i] && envp[i][j] != '=')
+	while (envp[i][j] && envp[i][j] != '=')
 		j++;
+	if (j == (int)ft_strlen(envp[i]))
+		return (ft_strdup(""));
 	j++;
 	value = ft_strdup(envp[i] + j);
 	return (value);

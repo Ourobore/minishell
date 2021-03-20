@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 17:35:36 by user42            #+#    #+#             */
-/*   Updated: 2021/03/19 09:20:41 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 08:03:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	sigint_handler(int signal)
 {
 	(void)signal;
-	ft_bzero(g_cmd_line->line, ft_strlen(g_cmd_line->line));
+	ft_bzero(g_shell.line, ft_strlen(g_shell.line));
 	ft_putchar_fd('\n', 1);
-	if (!g_cmd_line->in_fork)
+	if (!g_shell.in_fork)
 	{
-		g_cmd_line->exit_value = 130;
+		g_shell.exit_value = 130;
 		ft_putstr_fd("\033[1;33m"PROMPT"\033[0;0m", 1);
 	}
 }
@@ -27,15 +27,6 @@ void	sigint_handler(int signal)
 void	sigquit_handler(int signal)
 {
 	(void)signal;
-
-	//if (!g_cmd_line->in_fork)
-	//{
-	//	if ((g_cmd_line->line)[0] == 0)
-	//	{
-	//		free(g_cmd_line->line);
-	//		g_cmd_line->line = NULL;
-	//	}
-	//}
 }
 
 char	*add_character(char *input, char c)
@@ -75,7 +66,7 @@ char	*get_line(char *line)
 	if (ret == 0)
 	{
 		free(line);
-		free_command_line(g_cmd_line, 2);
+		free_shell_data(1);
 		ft_putendl_fd("exit", 2);
 		exit(130);
 	}

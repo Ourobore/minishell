@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:24:39 by user42            #+#    #+#             */
-/*   Updated: 2021/03/19 08:57:34 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 08:12:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	special_action(char *line, t_cmd **cmd, int *i)
 {
+	printf("in special action\n");
 	if (line[*i] == ';')
 	{
 		if (get_length_double_array((*cmd)->token) == 0)
@@ -27,7 +28,7 @@ int	special_action(char *line, t_cmd **cmd, int *i)
 	}
 	else if (line[*i] == ' ')
 		(*i)++;
-	else if (line[*i] == '|' && !multiline_character(line, line[*i], i))
+	else if (line[*i] == '|' && !multiline_character(line, line[*i], i, 1))
 	{
 		if (!add_cmd(cmd))
 		{
@@ -66,7 +67,7 @@ void	parse_dollar(char *line, int *i, char **buffer, char *envp[])
 	if (line[*i + 1] == '?')
 	{
 		(*i)++;
-		*buffer = add_on_buffer(*buffer, ft_itoa(g_cmd_line->exit_value), line);
+		*buffer = add_on_buffer(*buffer, ft_itoa(g_shell.exit_value), line);
 		return ;
 	}
 	var_name = ft_calloc(sizeof(char *), ft_strlen(line) + 1);

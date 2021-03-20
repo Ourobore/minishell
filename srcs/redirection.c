@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 09:09:48 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 20:03:11 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 08:43:10 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	get_redir_name(char *line, int *i, char **buffer, char *envp[])
 	(*i)++;
 	while (line[*i] && line[*i] == ' ')
 		(*i)++;
-	*buffer = get_next_token(line, i, *buffer, envp);
+	*buffer = get_next_token(i, *buffer, envp, 0);
 	if (((redir_type == 1 || redir_type == 2) && ft_strlen(*buffer) == 2) || (\
 		redir_type == 3 && ft_strlen(*buffer) == 3))
 	{

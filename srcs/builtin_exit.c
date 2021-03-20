@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:49:32 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 15:25:12 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/19 19:03:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_exit(char **command, t_lst *cmd_line)
+int	builtin_exit(char **command)
 {
 	int	length;
 	int	exit_status;
@@ -27,11 +27,10 @@ int	builtin_exit(char **command, t_lst *cmd_line)
 	else
 	{
 		if (length == 1)
-			exit_status = g_cmd_line->exit_value;
+			exit_status = g_shell.exit_value;
 		else
 			exit_status = ft_atoi(command[1]);
-		free_command_line(cmd_line, 2);
-		//free_double_array(envp);
+		free_shell_data(1);
 		exit(exit_status);
 	}
 	return (0);

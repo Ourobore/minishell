@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:37:10 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/18 19:33:42 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 07:06:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	add_cmd(t_cmd **cmd)
 	(*cmd)->next = new;
 	return (1);
 }
-
+/*
 t_lst	*add_command_line(t_lst *cmd_line)
 {
 	t_cmd	*new_cmd;
@@ -67,7 +67,7 @@ t_lst	*add_command_line(t_lst *cmd_line)
 	}
 	return (cmd_line);
 }
-
+*/
 t_cmd	*allocate_list(t_cmd *cmd)
 {
 	cmd->token = ft_calloc(sizeof(char *), 1);
@@ -102,9 +102,15 @@ void	free_command_list(t_cmd *head)
 	while (head != NULL)
 	{
 		if (head->token)
+		{
 			free_double_array(head->token);
+			head->token = NULL;
+		}
 		if (head->redir_file)
+		{
 			free_double_array(head->redir_file);
+			head->redir_file = NULL;
+		}
 		if (head->redir_in != -1 && head->redir_out != -2)
 			close(head->redir_in);
 		if (head->redir_out != -1 && head->redir_out != -2)
@@ -113,22 +119,22 @@ void	free_command_list(t_cmd *head)
 		head = head->next;
 		free(tmp);
 	}
+	head = NULL;
 }
 
-void	free_command_line(t_lst *cmd_line, int mode)
+void	free_shell_data(int mode)
 {
-	t_lst	*tmp;
-
-	if (mode == 2)
-		free_double_array(cmd_line->envp_copy);
-	while (cmd_line != NULL)
+	if (mode == 1)
 	{
-		tmp = cmd_line;
-		if (cmd_line->cmd)
-			free_command_list(cmd_line->cmd);
-		if (cmd_line->line)
-			free(cmd_line->line);
-		cmd_line = cmd_line->next;
-		free(tmp);
+		free_double_array(g_shell.envp_copy);
+		if (g_shell.line)
+		{
+			free(g_shell.line);
+			g_shell.line = NULL;
+		}
+		g_shell.envp_copy = NULL;
 	}
+	if (g_shell.cmd)
+		free_command_list(g_shell.cmd);
+	g_shell.cmd = NULL;
 }

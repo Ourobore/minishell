@@ -6,34 +6,29 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 10:56:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/19 09:37:57 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 08:44:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	parsing_hub(char *line, t_lst *cmd_line, char *envp[], int mode)
+int	parsing_hub(char *line, char *envp[], int mode)
 {
 	int		i;
-	t_lst	*tmp;
-	t_cmd	*cmd;
+	//t_cmd	*cmd;
 
 	i = 0;
-	tmp = cmd_line;
-
+	envp = envp;
 	while (line[i])
 	{
-		cmd = tmp->cmd;
-		i = parse_command_line(line, &cmd, i, envp);
-		if (mode == 2)
-			call_builtin_or_pipe(tmp, &envp);
+		add_cmd(&(g_shell.cmd));
+		i = parse_command_line(g_shell.line, &(g_shell.cmd), i, g_shell.envp_copy);
+		if (mode == 1)
+			call_builtin_or_pipe(g_shell.cmd, &(g_shell.envp_copy));
+		free_command_list(g_shell.cmd);
+		g_shell.cmd = NULL;
 		if (i < 0)
 			break ;
-		if (i < (int)ft_strlen(line))
-		{
-			tmp = add_command_line(tmp);
-			tmp = tmp->next;
-		}
 	}
 	return (i);
 }
@@ -58,7 +53,7 @@ int	parse_command_line(char *line, t_cmd **cmd, int i, char *envp[])
 		}
 		else
 		{
-			buffer = get_next_token(line, &i, buffer, envp);
+			buffer = get_next_token(&i, buffer, envp, 1);
 			if (i >= 0)
 				tmp->token = copy_buffer_on_array(&buffer, tmp->token);
 		}
@@ -67,16 +62,18 @@ int	parse_command_line(char *line, t_cmd **cmd, int i, char *envp[])
 	return (i);
 }
 
-char	*get_next_token(char *line, int *i, char *buffer, char *envp[])
+char	*get_next_token(int *i, char *buffer, char *envp[], int mode)
 {
-	int	j;
+	int		j;
+	char	*line;
 
 	j = ft_strlen(buffer);
+	line = g_shell.line;
 	while (*i >= 0 && line[*i])
 	{
-		if (multiline_character(line, line[*i], i))
+		if (multiline_character(line, line[*i], i, mode))
 			break ;
-		else if (is_special_character(line[*i]) && !in_quotes(line, *i))
+		if (is_special_character(line[*i]) && !in_quotes(line, *i))
 			return (buffer);
 		else if (line[*i] == '\\')
 			parse_backslash(line, buffer, i, &j);

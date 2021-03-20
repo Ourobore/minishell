@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:23:28 by user42            #+#    #+#             */
-/*   Updated: 2021/03/19 10:34:52 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 08:45:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	multiline_character(char *line, char c, int *i)
+int	multiline_character(char *line, char c, int *i, int mode)
 {
 	int	ret;
 
@@ -20,24 +20,19 @@ int	multiline_character(char *line, char c, int *i)
 	if (c == '\'' || c == '\"')
 	{
 		if (!closed_quote(line, *i, line[*i]))
-		{
-			ret = 1;printf("in error\n");
-			print_syntax_error(c);
-		}
+			ret = 1;
 	}
 	else if(c == '\\' && (*i == (int)ft_strlen(line) - 1 || \
 			(line[(*i) + 1] && line[(*i) + 1] == ' ')))
-	{
 		ret = 1;
-		print_syntax_error(c);
-	}
 	else if (c == '|' && *i == (int)ft_strlen(line) - 1)
-	{
 		ret = 1;
-		print_syntax_error(c);
-	}
 	if (ret == 1)
+	{
 		*i = -1;
+		if (mode == 1)
+			print_syntax_error(c);
+	}
 	return (ret);
 }
 
@@ -54,7 +49,7 @@ int	in_quotes(char *line, int pos)
 	while (line[i] && i <= pos && pos != 0)
 	{
 		//printf("CHARAC: [%c]\tIN SINGLE: [%d]\tIN DOUBLE[%d]\n", line[i], in_single, in_double);
-		if (line[i] == '\\' && !in_single && !in_double)
+		if (line[i] == '\\' && !in_single && !in_double)//line[i - 1] != '\'
 			i++;
 		else if (line[i] == '\'' && !in_double && i != pos)
 			in_single = !in_single;
@@ -78,8 +73,12 @@ int	closed_quote(char *line, int pos, char quote_type)
 	in_quote = 0;
 	if (quote_type != '\'' && quote_type != '\"')
 		return (1);
+	//printf("charac: %c\n", line[pos]);
 	if (in_quotes(line, pos))
+	{
+		//printf("in quotes\n");
 		return (1);
+	}
 	while (line[i])
 	{
 		if (line[i] == '\\' && !in_quote)
@@ -92,6 +91,7 @@ int	closed_quote(char *line, int pos, char quote_type)
 			return (1);
 		i++;
 	}
+	//printf("QUOTE [%c] NOT CLOSED\n", line[pos]);
 	return (0);
 }
 
@@ -102,3 +102,5 @@ int	is_special_character(char c)
 	else
 		return (0);
 }
+
+//int	is_multiline_character()
