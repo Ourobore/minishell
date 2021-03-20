@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:24:39 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 08:12:28 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 08:57:19 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	special_action(char *line, t_cmd **cmd, int *i)
 {
-	printf("in special action\n");
 	if (line[*i] == ';')
 	{
 		if (get_length_double_array((*cmd)->token) == 0)
@@ -30,7 +29,13 @@ int	special_action(char *line, t_cmd **cmd, int *i)
 		(*i)++;
 	else if (line[*i] == '|' && !multiline_character(line, line[*i], i, 1))
 	{
-		if (!add_cmd(cmd))
+		if (!get_length_double_array((*cmd)->token) || !get_length_double_array((*cmd)->redir_file))
+		{
+			print_syntax_error(line[*i]);
+			*i = -1;
+			return (-1);
+		}
+		else if (!add_cmd(cmd))
 		{
 			ft_putendl_fd("List memory allocation failed", STDERR);
 			*i = -2;

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 14:44:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 18:52:14 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 09:11:32 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	valid_token(char *token)
 	int	i;
 
 	i = 0;
-	while (token[i])
+	while (token[i] && token[i] != '=')
 	{
 		if (!is_env_character(token[i]))
 			return (0);
