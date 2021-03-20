@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 17:35:36 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 11:15:20 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:57:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,10 @@ char	*get_line(void)
 	ret = read(0, &c, 1);
 	if (ret == 0)
 	{
+		ret = g_shell.exit_value;
 		free_shell_data(1);
 		ft_putendl_fd("exit", 2);
-		exit(130);
+		exit(ret);
 	}
 	while (c != '\n')
 	{

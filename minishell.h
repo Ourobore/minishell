@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 11:39:31 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 12:14:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int		valid_token(char *token);
 int		nb_cd_args(char **token);
 int		verify_cd_args(char **token, char *envp[]);
 int		change_directory(char **token, char *envp[], int ret);
+int		only_digits(char *token);
 
 /*
 **Pipes
@@ -161,5 +162,6 @@ void	sigquit_handler(int signal);
 void	print_syntax_error(char c);
 void	print_not_valid_idendifier(char *token);
 void	error_malloc(void);
+void	argument_error(char **command);
 
 #endif

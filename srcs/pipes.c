@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 11:16:02 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 12:42:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	child_exec(t_cmd *cmd, char *envp[])
 		ft_putendl_fd(": command not found", 2);
 	}
 	free_shell_data(1);
-	exit(EXIT_FAILURE);
+	exit(127);
 }
 
 int		get_child_status(int child_process, int nb_pipes)

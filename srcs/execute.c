@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 08:27:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 11:32:33 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 12:42:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int		exec_command(char **command, char *envp[])
 	else
 	{
 		path = get_env_path(envp);
+		if (!path)
+			return (1);
 		exec_path = search_executable_in_path(command[0], path);
 		free_double_array(path);
 		if (exec_path)
