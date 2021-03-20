@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 08:41:01 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:39:53 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int argc, char **argv, char *envp[])
 		signal(SIGINT, sigint_handler);
 		signal(SIGQUIT, sigquit_handler);
 		ft_putstr_fd("\033[1;33m"PROMPT"\033[0;0m", 1);
-		g_shell.line = get_line(g_shell.line);
+		g_shell.line = get_line();
 		exit_status = parsing_hub(g_shell.line, g_shell.envp_copy, 0);
 		if (ft_strlen(g_shell.line) > 0 && exit_status >= 0)
 			exit_status = parsing_hub(g_shell.line, g_shell.envp_copy, 1);

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:23:28 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 08:45:14 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:25:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	multiline_character(char *line, char c, int *i, int mode)
 	int	ret;
 
 	ret = 0;
+	//printf("in multiline\n");
 	if (c == '\'' || c == '\"')
 	{
 		if (!closed_quote(line, *i, line[*i]))
@@ -46,21 +47,30 @@ int	in_quotes(char *line, int pos)
 	in_single = 0;
 	in_double = 0;
 	//printf("\n\n");
-	while (line[i] && i <= pos && pos != 0)
+	//printf("----CARAC VERIF [%c]-------\n", line[pos]);
+	while (line[i] && i < pos && pos != 0)
 	{
 		//printf("CHARAC: [%c]\tIN SINGLE: [%d]\tIN DOUBLE[%d]\n", line[i], in_single, in_double);
-		if (line[i] == '\\' && !in_single && !in_double)//line[i - 1] != '\'
+		if (line[i] == '\\' && !in_single/* && !in_double*/)//line[i - 1] != '\'
 			i++;
-		else if (line[i] == '\'' && !in_double && i != pos)
+		else if (line[i] == '\'' && !in_double)
 			in_single = !in_single;
-		else if (line[i] == '\"' && !in_single && i != pos)//
+		else if (line[i] == '\"' && !in_single)//
 			in_double = !in_double;
 		i++;
 	}
 	if (in_single)
+	{
+		if (line[i] == '\'')
+			return (0);
 		return (1);
-	else if (in_double)
+	}
+	if (in_double)
+	{
+		if (line[i] == '\"')
+			return (0);
 		return (2);
+	}
 	return (0);
 }
 
@@ -81,7 +91,7 @@ int	closed_quote(char *line, int pos, char quote_type)
 	}
 	while (line[i])
 	{
-		if (line[i] == '\\' && !in_quote)
+		if (line[i] == '\\' && (!in_quote || (in_quote && quote_type == '\"')))
 			i++;
 		else if (i < pos && line[i] == quote_type)
 			in_quote = !in_quote;

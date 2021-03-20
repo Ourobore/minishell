@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 17:35:36 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 08:03:02 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:41:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,34 @@ char	*add_character(char *input, char c)
 	return (str);
 }
 
+char	*get_line(void)
+{
+	int		ret;
+	char	c;
+
+	g_shell.line = NULL;
+	g_shell.line = ft_calloc(sizeof(char), 1);
+	if (!g_shell.line)
+		return (NULL);
+	g_shell.line[0] = 0;
+	ret = read(0, &c, 1);
+	if (ret == 0)
+	{
+		free_shell_data(1);
+		ft_putendl_fd("exit", 2);
+		exit(130);
+	}
+	while (c != '\n')
+	{
+		g_shell.line = add_character(g_shell.line, c);
+		ret = read(0, &c, 1);
+	}
+	if (ret == -1 || g_shell.line == NULL)
+		return (NULL);
+	return (g_shell.line);
+}
+
+/*
 char	*get_line(char *line)
 {
 	int		ret;
@@ -65,7 +93,7 @@ char	*get_line(char *line)
 	ret = read(0, &c, 1);
 	if (ret == 0)
 	{
-		free(line);
+		//free(line);
 		free_shell_data(1);
 		ft_putendl_fd("exit", 2);
 		exit(130);
@@ -79,3 +107,4 @@ char	*get_line(char *line)
 		return (NULL);
 	return (line);
 }
+*/

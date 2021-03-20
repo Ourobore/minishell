@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:24:39 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 08:57:19 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:24:43 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,11 @@ void	parse_backslash(char *line, char *buffer, int *i, int *j)
 		buffer[(*j)++] = line[*i];
 	else if (in_quotes(line, *i) == 2)
 	{
-		if (line[(*i) + 1] && (line[(*i) + 1] == '\\' || line[(*i) + 1] == '$'))
+		if (line[(*i) + 1] && (line[(*i) + 1] == '\\' || line[(*i) + 1] == '$' || \
+		line[(*i) + 1] == '\'' || line[(*i) + 1] == '\"'))
 			buffer[(*j)++] = line[(*i)++ + 1];
 		else
 			buffer[(*j)++] = line[*i];
 	}
+	//printf("buffer backslash: [%s]\n", buffer);
 }

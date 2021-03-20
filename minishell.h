@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 08:43:03 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:39:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		builtin_unset(char **token, char **envp[]);
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 char	*add_character(char *input, char c);
-char	*get_line(char *line);
+char	*get_line(void);
 char	**copy_envp(char *envp[]);
 
 

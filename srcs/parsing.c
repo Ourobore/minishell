@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 10:56:00 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 08:44:48 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:25:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ char	*get_next_token(int *i, char *buffer, char *envp[], int mode)
 	line = g_shell.line;
 	while (*i >= 0 && line[*i])
 	{
+		//printf("CACACARAC: [%c]\tI: %d\n", line[*i], *i);
 		if (multiline_character(line, line[*i], i, mode))
 			break ;
 		if (is_special_character(line[*i]) && !in_quotes(line, *i))
@@ -87,6 +88,7 @@ char	*get_next_token(int *i, char *buffer, char *envp[], int mode)
 		else if (line[*i] != '\'' && line[*i] != '\"')
 			buffer[j++] = line[*i];
 		(*i)++;
+		//printf("buffer: %s\n", buffer);
 	}
 	return (buffer);
 }
