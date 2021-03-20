@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 17:46:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 19:31:08 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:53:19 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_cd(char **token, char **envp[])
+int		builtin_cd(char **token, char **envp[])
 {
 	int		ret;
 	int		exit_status;
@@ -28,7 +28,7 @@ int	builtin_cd(char **token, char **envp[])
 	return (exit_status);
 }
 
-int	change_directory(char **token, char *envp[], int ret)
+int		change_directory(char **token, char *envp[], int ret)
 {
 	char	*home_path;
 
@@ -50,7 +50,7 @@ int	change_directory(char **token, char *envp[], int ret)
 	return (0);
 }
 
-int	verify_cd_args(char **token, char *envp[])
+int		verify_cd_args(char **token, char *envp[])
 {
 	if (nb_cd_args(token) == 0)
 	{
@@ -95,7 +95,7 @@ search_token_in_envp("OLDPWD", *envp), envp);
 	free(join_oldpwd);
 }
 
-int	nb_cd_args(char **token)
+int		nb_cd_args(char **token)
 {
 	int	i;
 

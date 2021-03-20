@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:47:55 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 10:39:53 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:37:07 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_data	g_shell;
 
-int	main(int argc, char **argv, char *envp[])
+int		main(int argc, char **argv, char *envp[])
 {
 	int		exit_status;
 
@@ -36,11 +36,7 @@ int	main(int argc, char **argv, char *envp[])
 			g_shell.line = NULL;
 		}
 		if (exit_status == -2)
-		{
-			ft_putendl_fd("Malloc allocation error. Exit", 2);
-			free_shell_data(2);
-			exit(1);
-		}
+			error_malloc();
 	}
 }
 

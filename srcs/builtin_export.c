@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 09:19:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 09:10:45 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:14:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_export(char **token, char **envp[])
+int		builtin_export(char **token, char **envp[])
 {
 	int		exit_status;
 	char	**sorted_env;
@@ -20,8 +20,6 @@ int	builtin_export(char **token, char **envp[])
 	exit_status = 0;
 	if (!token[1])
 	{
-		for(int i = 0; (*envp)[i]; i++)
-			printf("prout[i]: %s\n", (*envp)[i]);
 		sorted_env = alphabetically_sort_env((*envp));
 		print_export(sorted_env);
 		free_double_array(sorted_env);
@@ -31,7 +29,7 @@ int	builtin_export(char **token, char **envp[])
 	return (exit_status);
 }
 
-int	export_token(char **token, char **envp[])
+int		export_token(char **token, char **envp[])
 {
 	int	i;
 	int	token_index;
@@ -59,7 +57,7 @@ int	export_token(char **token, char **envp[])
 	return (exit_status);
 }
 
-int	print_export(char **sorted_env)
+int		print_export(char **sorted_env)
 {
 	int	i;
 	int	j;

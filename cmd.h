@@ -6,14 +6,14 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 09:27:39 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/19 18:47:26 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:40:37 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CMD_H
 # define CMD_H
 
-typedef struct s_cmd
+typedef struct		s_cmd
 {
 	char			**token;
 	char			**redir_file;
@@ -22,7 +22,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }					t_cmd;
 
-typedef struct s_data
+typedef struct		s_data
 {
 	struct s_cmd	*cmd;
 	char			*line;

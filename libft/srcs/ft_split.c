@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 07:52:54 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 21:10:18 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:42:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static void	free_tab(char **tab)
 	free(tab);
 }
 
-char	**ft_split(const char *s, char c)
+char		**ft_split(const char *s, char c)
 {
 	char	**split;
 	char	*tmp;

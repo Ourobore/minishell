@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/08 08:33:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/01/14 10:51:22 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/20 11:42:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	nb_char(int n)
 	return (count);
 }
 
-char	*ft_itoa(int n)
+char		*ft_itoa(int n)
 {
 	char		*s;
 	long int	nb;

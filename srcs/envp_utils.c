@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 20:09:34 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/19 21:46:07 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:14:15 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	add_token_in_envp(char *token, char **envp[])
+int		add_token_in_envp(char *token, char **envp[])
 {
 	int		i;
 	char	**new_envp;
@@ -35,14 +35,10 @@ int	add_token_in_envp(char *token, char **envp[])
 	}
 	free_double_array(g_shell.envp_copy);
 	g_shell.envp_copy = new_envp;
-	//free_double_array((*envp));
-	//(*envp) = new_envp;
-	//free_double_array(new_envp);
-	//(*envp) = g_cmd_line->envp_copy;
 	return (0);
 }
 
-int	modify_token_in_envp(char *token, int token_index, char **envp[])
+int		modify_token_in_envp(char *token, int token_index, char **envp[])
 {
 	char	*new_token;
 
@@ -52,7 +48,7 @@ int	modify_token_in_envp(char *token, int token_index, char **envp[])
 	return (0);
 }
 
-int	search_token_in_envp(char *token, char *envp[])
+int		search_token_in_envp(char *token, char *envp[])
 {
 	int	i;
 
@@ -68,7 +64,7 @@ int	search_token_in_envp(char *token, char *envp[])
 	return (-1);
 }
 
-int	remove_token_in_envp(int token_index, char **envp[])
+int		remove_token_in_envp(int token_index, char **envp[])
 {
 	int		i;
 	int		j;

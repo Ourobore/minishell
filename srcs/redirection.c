@@ -6,33 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 09:09:48 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 08:43:10 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:31:46 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	get_redir_name(char *line, int *i, char **buffer, char *envp[])
-{
-	int	redir_type;
-
-	redir_type = get_redir_type(line, i, buffer);
-	(*i)++;
-	while (line[*i] && line[*i] == ' ')
-		(*i)++;
-	*buffer = get_next_token(i, *buffer, envp, 0);
-	if (((redir_type == 1 || redir_type == 2) && ft_strlen(*buffer) == 2) || (\
-		redir_type == 3 && ft_strlen(*buffer) == 3))
-	{
-		if (redir_type == 1)
-			print_syntax_error('<');
-		else
-			print_syntax_error('>');
-		*i = -1;
-	}
-}
-
-int	get_redir_type(char *line, int *i, char **buffer)
+int		get_redir_type(char *line, int *i, char **buffer)
 {
 	buffer = buffer;
 	if (line[*i] == '<')
@@ -61,7 +41,7 @@ int	get_redir_type(char *line, int *i, char **buffer)
 	return (0);
 }
 
-int	open_redir_hub(t_cmd **cmd)
+int		open_redir_hub(t_cmd **cmd)
 {
 	int		i;
 	int		redir_type;
@@ -82,18 +62,26 @@ int	open_redir_hub(t_cmd **cmd)
 			else
 				redir_type = 2;
 		}
-		if (redir_type == 1)
-			error = open_redir_in(cmd, &file[2]);
-		else if (redir_type == 2)
-			error = open_redir_out(cmd, &file[2], redir_type);
-		else if (redir_type == 3)
-			error = open_redir_out(cmd, &file[3], redir_type);
+		error = open_redir_type(cmd, file, redir_type);
 		i++;
 	}
 	return (!error);
 }
 
-int	open_redir_in(t_cmd **cmd, char *file_name)
+int		open_redir_type(t_cmd **cmd, char *file, int redir_type)
+{
+	int	error;
+
+	if (redir_type == 1)
+		error = open_redir_in(cmd, &file[2]);
+	else if (redir_type == 2)
+		error = open_redir_out(cmd, &file[2], redir_type);
+	else if (redir_type == 3)
+		error = open_redir_out(cmd, &file[3], redir_type);
+	return (error);
+}
+
+int		open_redir_in(t_cmd **cmd, char *file_name)
 {
 	int	fd;
 
@@ -115,7 +103,7 @@ int	open_redir_in(t_cmd **cmd, char *file_name)
 	}
 }
 
-int	open_redir_out(t_cmd **cmd, char *file_name, int redir_type)
+int		open_redir_out(t_cmd **cmd, char *file_name, int redir_type)
 {
 	int	fd;
 

@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 08:27:18 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/16 18:48:57 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:32:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	exec_command(char **command, char *envp[])
+int		exec_command(char **command, char *envp[])
 {
 	char	**path;
 	char	*exec_path;

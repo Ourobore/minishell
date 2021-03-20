@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchapren <lchapren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 15:14:07 by lchapren          #+#    #+#             */
-/*   Updated: 2021/02/13 15:15:48 by lchapren         ###   ########.fr       */
+/*   Updated: 2021/03/20 10:53:32 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	builtin_pwd(void)
+int		builtin_pwd(void)
 {
 	char	*pwd;
 

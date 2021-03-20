@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 17:35:36 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 10:41:21 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:15:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,33 +78,3 @@ char	*get_line(void)
 		return (NULL);
 	return (g_shell.line);
 }
-
-/*
-char	*get_line(char *line)
-{
-	int		ret;
-	char	c;
-
-	line = NULL;
-	line = ft_calloc(sizeof(char), 1);
-	if (!line)
-		return (NULL);
-	line[0] = 0;
-	ret = read(0, &c, 1);
-	if (ret == 0)
-	{
-		//free(line);
-		free_shell_data(1);
-		ft_putendl_fd("exit", 2);
-		exit(130);
-	}
-	while (c != '\n')
-	{
-		line = add_character(line, c);
-		ret = read(0, &c, 1);
-	}
-	if (ret == -1 || line == NULL)
-		return (NULL);
-	return (line);
-}
-*/

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:50:12 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 10:39:47 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:39:31 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@
 
 extern t_data	g_shell;
 
-//Built-ins
+/*
+**Built-ins
+*/
 int		call_builtin_or_pipe(t_cmd *cmd, char **envp[]);
 int		call_builtin(t_cmd *head, char **envp[]);
 int		is_builtin(char **token);
@@ -49,16 +51,18 @@ int		builtin_cd(char **token, char **envp[]);
 int		builtin_export(char **token, char **envp[]);
 int		builtin_unset(char **token, char **envp[]);
 
-//General functions
-//int		execution_loop(char *line, t_lst *cmd_line, char **envp[]);
+/*
+**General functions
+*/
 char	**copy_envp(char *envp[]);
 char	*get_pwd(void);
 char	*add_character(char *input, char c);
 char	*get_line(void);
 char	**copy_envp(char *envp[]);
 
-
-//Utility functions
+/*
+**Utility functions
+*/
 void	initialize_data(char *envp[]);
 char	**alphabetically_sort_env(char *envp[]);
 char	**alphabetical_bubble_sort(char **array);
@@ -70,7 +74,9 @@ int		nb_cd_args(char **token);
 int		verify_cd_args(char **token, char *envp[]);
 int		change_directory(char **token, char *envp[], int ret);
 
-//Pipes
+/*
+**Pipes
+*/
 void	call_builtin_pipe(t_cmd *cmd, char *envp[]);
 int		exec_pipeline(t_cmd *cmd, char *envp[]);
 void	open_close_pipes(int *pipefd, int nb_pipes, int mode);
@@ -79,15 +85,20 @@ void	child_exec(t_cmd *cmd, char *envp[]);
 int		get_child_status(int child_process, int nb_pipes);
 int		pipe_loop(t_cmd *head, int **pipefd, char *envp[]);
 
-//Redirections
+/*
+**Redirections
+*/
 void	get_redir_name(char *line, int *i, char **buffer, char *envp[]);
 int		get_redir_type(char *line, int *i, char **buffer);
 void	builtin_redir(t_cmd *cmd, int *save_in, int *save_out, int mode);
 int		open_redir_hub(t_cmd **cmd);
+int		open_redir_type(t_cmd **cmd, char *file, int redir_type);
 int		open_redir_in(t_cmd **cmd, char *file_name);
 int		open_redir_out(t_cmd **cmd, char *file_name, int open_mode);
 
-//Manipulation of envp
+/*
+**Manipulation of envp
+*/
 int		add_token_in_envp(char *token, char **envp[]);
 int		modify_token_in_envp(char *token, int token_index, char **envp[]);
 int		search_token_in_envp(char *token, char *envp[]);
@@ -97,7 +108,9 @@ char	*get_token_value_in_envp(char *token, char *envp[]);
 char	*get_env_variable(char *line, int *i, char *envp[]);
 int		is_env_character(char c);
 
-//Execution functions
+/*
+**Execution functions
+*/
 int		exec_command(char **command, char *envp[]);
 char	*search_executable_in_path(char *executable, char **path);
 char	*search_executable_in_dir(char *executable, char *path);
@@ -106,20 +119,24 @@ int		is_absolute_or_relative_path(char *path);
 int		directory_exists(char *dir_path);
 char	**get_env_path(char *envp[]);
 
-//Linked list and global
+/*
+**Linked list and global
+*/
 int		add_cmd(t_cmd **cmd);
 t_cmd	*allocate_list(t_cmd *cmd);
-//t_lst	*add_command_line(t_lst *cmd_line);
 int		get_length_list(t_cmd *head);
 char	**copy_buffer_on_array(char **buffer, char **array);
 void	free_command_list(t_cmd *head);
 void	free_shell_data(int mode);
 
-//Parsing
+/*
+**Parsing
+*/
 int		parsing_hub(char *line, char *envp[], int mode);
-int		parse_command_line(char *line, t_cmd **cmd, int i, char *envp[]);
+int		parse_cmd_line(char *line, t_cmd **cmd, int i, char *envp[]);
 int		in_quotes(char *line, int pos);
 int		closed_quote(char *line, int pos, char quote_type);
+int		return_closed_quote(char *line, int i, int in_single, int in_double);
 int		special_action(char *line, t_cmd **cmd, int *i);
 int		is_special_character(char c);
 void	parse_backslash(char *line, char *buffer, int *i, int *j);
@@ -128,15 +145,21 @@ void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
 void	store_dollar(char *line, char **buffer, char *var_name, char *value);
 void	parse_dollar(char *line, int *i, char **buffer, char *envp[]);
 int		multiline_character(char *line, char c, int *i, int mode);
+int		pipe_handling(char *line, t_cmd **cmd, int *i);
 char	*get_next_token(int *i, char *buffer, char *envp[], int mode);
 char	*add_on_buffer(char *buffer, char *to_add, char *line);
 
-//Signals handling
+/*
+**Signals handling
+*/
 void	sigint_handler(int signal);
 void	sigquit_handler(int signal);
 
-//Error handling
+/*
+**Error handling
+*/
 void	print_syntax_error(char c);
 void	print_not_valid_idendifier(char *token);
+void	error_malloc(void);
 
 #endif

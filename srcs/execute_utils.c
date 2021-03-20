@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 10:23:28 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/17 09:02:09 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:47:16 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	directory_exists(char *dir_path)
+int		directory_exists(char *dir_path)
 {
 	int		exit_status;
 	char	*pwd;
@@ -29,7 +29,7 @@ int	directory_exists(char *dir_path)
 	return (exit_status);
 }
 
-int	is_absolute_or_relative_path(char *path)
+int		is_absolute_or_relative_path(char *path)
 {
 	if (ft_strncmp(path, "/", 1) == 0)
 		return (1);

@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 09:47:38 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 07:08:29 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:45:39 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	call_builtin_or_pipe(t_cmd *cmd, char **envp[])
+int		call_builtin_or_pipe(t_cmd *cmd, char **envp[])
 {
 	int		length;
 	int		exit_status;
@@ -29,7 +29,7 @@ int	call_builtin_or_pipe(t_cmd *cmd, char **envp[])
 	return (exit_status);
 }
 
-int	call_builtin(t_cmd *cmd, char **envp[])
+int		call_builtin(t_cmd *cmd, char **envp[])
 {
 	int	ret;
 	int	save_out;
@@ -107,7 +107,7 @@ void	call_builtin_pipe(t_cmd *cmd, char *envp[])
 	}
 }
 
-int	is_builtin(char **token)
+int		is_builtin(char **token)
 {
 	if (ft_strcmp(token[0], "exit") == 0)
 		return (1);

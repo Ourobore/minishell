@@ -6,13 +6,13 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 22:51:15 by lchapren          #+#    #+#             */
-/*   Updated: 2021/03/20 07:08:48 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:16:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	exec_pipeline(t_cmd *head, char *envp[])
+int		exec_pipeline(t_cmd *head, char *envp[])
 {
 	int		*pipefd;
 	int		nb_pipes;
@@ -34,7 +34,7 @@ int	exec_pipeline(t_cmd *head, char *envp[])
 	return (get_child_status(child_process, nb_pipes));
 }
 
-int	pipe_loop(t_cmd *head, int **pipefd, char *envp[])
+int		pipe_loop(t_cmd *head, int **pipefd, char *envp[])
 {
 	t_cmd	*cmd;
 	int		nb_pipes;
@@ -78,16 +78,19 @@ void	child_pipe_redir(t_cmd *head, int *pipefd, int cmd_num, int nb_pipes)
 
 void	child_exec(t_cmd *cmd, char *envp[])
 {
-	call_builtin_pipe(cmd, envp);
-	exec_command(cmd->token, envp);
-	ft_putstr_fd(MINISHELL, 2);
-	ft_putstr_fd(cmd->token[0], 2);
-	ft_putendl_fd(": command not found", 2);
+	if (cmd->token[0])
+	{
+		call_builtin_pipe(cmd, envp);
+		exec_command(cmd->token, envp);
+		ft_putstr_fd(MINISHELL, 2);
+		ft_putstr_fd(cmd->token[0], 2);
+		ft_putendl_fd(": command not found", 2);
+	}
 	free_shell_data(1);
 	exit(EXIT_FAILURE);
 }
 
-int	get_child_status(int child_process, int nb_pipes)
+int		get_child_status(int child_process, int nb_pipes)
 {
 	int	i;
 	int	status;

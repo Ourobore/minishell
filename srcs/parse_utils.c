@@ -6,14 +6,16 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 10:24:39 by user42            #+#    #+#             */
-/*   Updated: 2021/03/20 10:24:43 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:13:25 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	special_action(char *line, t_cmd **cmd, int *i)
+int		special_action(char *line, t_cmd **cmd, int *i)
 {
+	int	ret;
+
 	if (line[*i] == ';')
 	{
 		if (get_length_double_array((*cmd)->token) == 0)
@@ -29,18 +31,9 @@ int	special_action(char *line, t_cmd **cmd, int *i)
 		(*i)++;
 	else if (line[*i] == '|' && !multiline_character(line, line[*i], i, 1))
 	{
-		if (!get_length_double_array((*cmd)->token) || !get_length_double_array((*cmd)->redir_file))
-		{
-			print_syntax_error(line[*i]);
-			*i = -1;
-			return (-1);
-		}
-		else if (!add_cmd(cmd))
-		{
-			ft_putendl_fd("List memory allocation failed", STDERR);
-			*i = -2;
-			return (-2);
-		}
+		ret = pipe_handling(line, cmd, i);
+		if (ret != 0)
+			return (ret);
 		*cmd = (*cmd)->next;
 		(*i)++;
 	}
@@ -83,7 +76,7 @@ void	parse_dollar(char *line, int *i, char **buffer, char *envp[])
 	}
 	(*i)++;
 	j = 0;
-	while(*i != -1 && line[*i] && is_env_character(line[*i]))
+	while (*i != -1 && line[*i] && is_env_character(line[*i]))
 		var_name[j++] = line[(*i)++];
 	(*i)--;
 	value = get_token_value_in_envp(var_name, envp);
@@ -113,11 +106,11 @@ void	parse_backslash(char *line, char *buffer, int *i, int *j)
 		buffer[(*j)++] = line[*i];
 	else if (in_quotes(line, *i) == 2)
 	{
-		if (line[(*i) + 1] && (line[(*i) + 1] == '\\' || line[(*i) + 1] == '$' || \
-		line[(*i) + 1] == '\'' || line[(*i) + 1] == '\"'))
+		if (line[(*i) + 1] && (line[(*i) + 1] == '\\' || \
+		line[(*i) + 1] == '$' || line[(*i) + 1] == '\'' || \
+		line[(*i) + 1] == '\"'))
 			buffer[(*j)++] = line[(*i)++ + 1];
 		else
 			buffer[(*j)++] = line[*i];
 	}
-	//printf("buffer backslash: [%s]\n", buffer);
 }
